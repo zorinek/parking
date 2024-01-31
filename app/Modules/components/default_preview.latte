@@ -1,0 +1,97 @@
+{layout '../@layout_protected.latte'}
+{if is_file('../app/Modules/' . $custom_buttons_path . 'preview_custom_header.latte')}
+    {import '../' . $custom_buttons_path . 'preview_custom_header.latte'}
+{else}
+    {import 'preview_default_header.latte'}
+{/if}
+{block content}
+{dump $exports}
+<div class="container">
+    <div class='row'>
+        <div class='col-12'>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="float-start">{_ $lang_file_name . 'h'}</h3>
+					{include 'preview_export_buttons.latte'}
+                </div>
+		{if !isset($params)}{var $params['order'] = []}{elseif !isset($params['order'])}{var $params['order'] = []}{/if}
+		<div class="card-body m-0 p-0">
+			<table class="table table-striped m-0 d-none d-sm-table">
+				<thead>
+					{include 'preview_header.latte', 'params' => $params}
+				</thead>
+				<tbody>
+					{foreach $all as $line}
+						<tr>
+							{include 'preview_values.latte', 'line' => $line}
+
+							{if is_file('../app/Modules/' . $custom_buttons_path . 'preview_custom_buttons.latte')}
+								{include '../' . $custom_buttons_path . 'preview_custom_buttons.latte', 'line' => $line, 'parameters' => isset($exports['parameters']) ? array_merge($exports['parameters'], $parameters) : $parameters}
+							{else}
+								<td></td>
+							{/if}
+						</tr>
+					{/foreach}
+					{if count($all) == 0}
+						<tr>
+							<td colspan="{count($search_values) + 1}" class="bg-warning text-center">{_ preview.no_results}</td>
+						</tr>
+					{/if}
+				</tbody>
+			</table> 
+
+
+			<div id="accordion" class="d-block d-sm-none">
+
+				{include 'preview_header_responsive.latte'} 
+
+				{foreach $all as $line}
+
+					<div class="card">
+						<div class="card-header  p-1 m-0" id="headingOne">
+							<button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapse-{$line->{$search_values[array_key_first($search_values)][0]}}" aria-expanded="true" aria-controls="collapse-{$line->{$search_values[array_key_first($search_values)][0]}}">
+								#{$line->{$search_values[array_key_first($search_values)][0]}} 
+							</button>
+						</div>
+
+						<div id="collapse-{$line->{$search_values[array_key_first($search_values)][0]}}" class="collapse" aria-labelledby="heading-{$line->{$search_values[array_key_first($search_values)][0]}}" data-parent="#accordion">
+							<div class="card-body m-0 p-0">
+								<table class="table table-sm">
+									{include 'preview_values_responsive.latte', 'line' => $line}
+
+									{if is_file('../app/Modules/' . $custom_buttons_path . 'preview_custom_buttons_responsive.latte')}
+										{include '../' . $custom_buttons_path . 'preview_custom_buttons_responsive.latte', 'line' => $line}
+									{/if}
+
+								</table> 
+							</div>
+						</div>
+					</div>  
+
+				{/foreach}
+				{if count($all) == 0}
+					<div class="bg-warning text-center">{_ preview.no_results}</div>
+				{/if}
+
+			</div>   
+
+
+
+		</div>
+		<div class="card-footer">
+			{include 'pagination.latte',
+                        limit => $limit,
+                        page => $page,
+                        count => $all_count,
+                        presenter => $redirect_route,
+                        arr_par => isset($exports['parameters']) ? $exports['parameters'] : []
+			}
+
+		</div>
+	</div>
+</div>
+</div>
+</div>           
+{/block}
+
+

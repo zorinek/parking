@@ -1,0 +1,10 @@
+app/config/local.neon
+app/config/sample.local.neon
+nbproject
+temp
+temp_cron
+log
+uploads/*
+www/video
+www/video_cross
+vendor/*

@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{_ contactform.notification_email.title} {$server}</title>
+		<style>
+
+		</style>
+	</head>
+	<body>
+        <p>{_ contactform.notification_email.hello},</p>
+        <p>{_ contactform.notification_email.message_1} {$server} {_ contactform.notification_email.message_2}.</p>
+        <p>{_ contactform.notification_email.sender}: <a href="mailto:{$sender}">{$sender}</a></p>
+			{if $name}
+            <p>{_ contactform.notification_email.name}: {$name}</p>
+        {/if}
+        {if $phone}
+            <p>{_ contactform.notification_email.phone}: {$phone}</p>
+        {/if}
+        {if $category}
+            <p>{_ contactform.notification_email.category}: {$category}</p>
+        {/if}
+        <p>{_ contactform.notification_email.message}:</p>
+        <p>{$message}<p>
+	</body>
+</html>

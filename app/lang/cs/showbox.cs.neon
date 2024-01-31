@@ -1,0 +1,12 @@
+name: "Poznámky"
+note_saved: "Poznámka uložena"
+insert_text: "Vyplňte text poznámky"
+note_text: "Text poznámky"
+button_insert: "Vložit"
+last_inserted_notes: "Poslední vložené poznámky"
+show_note: "zobrazit"
+no_notes: "Nenalezeny žádné poznámky"
+show_all: "zobrazit vše"
+note_title: "Poznámka"
+note_close: "Zavřít"
+

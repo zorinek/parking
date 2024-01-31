@@ -1,0 +1,55 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ otp.otp.title}
+{/block}
+{block description}
+{_ otp.otp.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ otp.otp.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form n:name="otpForm" class="needs-validation">
+                <div class="card">
+                    <div class="card-header">
+                        <h1>{_ otp.otp.h}</h1>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="alert alert-danger error" role="alert" n:ifcontent n:foreach="$form->ownErrors as $error">
+                            {if $error == '1'}
+                                {_ otp.otp.error_1} <a n:href=":Login:Registration:sendVerificationEmailAgain">{_ otp.otp.here}</a>
+                            {else}
+                                {$error}
+                            {/if}
+                        </div>
+
+                        <div class="form-group">
+                            <label n:name="use_email" class="form-label mt-2">{_ otp.otp.use_email}</label>
+                            <input type="email" class="form-control" id="email" n:name="use_email">
+                        </div>
+                        <label n:name="uso_passhash" class="form-label mt-2">{_ otp.otp.uso_passhash}</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control {if !$password_display}rounded-end{/if} {if $form['uso_passhash']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" value="{$form['uso_passhash']->value}" id="password" n:name="uso_passhash">
+                            {if $password_display}<button class="btn btn-outline-secondary show-password rounded-end fa fa-eye-slash" type="button"></button>{/if}
+                            <div class="invalid-feedback">{$form['uso_passhash']->error}</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        {if !$disable_password_change}
+                            <a n:href=":Login:Login:resetPassword" class="btn btn-secondary">{_ otp.otp.button_reset_password}</a>
+                        {/if}
+                        <button type="submit" n:name="otp_sign_in" class="btn btn-success float-end">{_ otp.otp.otp_sign_in}</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{/block}

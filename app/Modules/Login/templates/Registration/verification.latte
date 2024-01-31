@@ -1,0 +1,38 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ registration.verification.title}
+{/block}
+{block description}
+{_ registration.verification.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ registration.verification.breadcrumb}
+{/block}
+{block content}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{_ registration.verification.h}</h3>
+                </div>
+                <div class="card-body">
+                    {if $message == 1}
+                        <div class="alert alert-warning m-0" role="alert">
+                            {_ registration.verification.token_expired}
+                        </div>
+                    {elseif $message == 2}
+                        <div class="alert alert-warning m-0" role="alert">
+                            {_ registration.verification.token_not_found}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}

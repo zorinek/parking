@@ -1,0 +1,5 @@
+<td>
+    <a n:href=":Projects:Projects:detail $line->{$search_values[0][0]}" class="btn btn-primary btn-sm">{_ projects.admin.button_detail}</a>
+    {if $user->isInRole('admin')}<a n:href=":Projects:Projects:update $line->{$search_values[0][0]}" class="btn btn-primary btn-sm">{_ projects.admin.button_update}</a>{/if}
+    <a n:href=":Projects:Projects:exportData $line->{$search_values[0][0]}" class="btn btn-primary btn-sm">{_ projects.admin.button_export}</a>
+</td>

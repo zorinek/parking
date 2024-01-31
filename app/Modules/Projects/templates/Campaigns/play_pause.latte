@@ -1,0 +1,23 @@
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-5">
+                <button id="playpause" type="button" class="btn btn-primary">{_ sections.process.play_pause}</button>
+                <button id="stop" type="button" class="btn btn-primary">{_ sections.process.stop}</button>
+                <button id="back_10" type="button" class="btn btn-primary">- 10s</button>
+                <button id="back_5" type="button" class="btn btn-primary">- 5s</button>
+                <button id="next_5" type="button" class="btn btn-primary">+ 5s</button>
+                <button id="next_10" type="button" class="btn btn-primary">+ 10s</button>
+            </div>
+            {*dump $max_min_times_rides*}
+            {var $start = new \DateTime($max_min_times_rides[0][0])}
+            {var $end = new \DateTime($max_min_times_rides[0][1])}
+            {var $diff = $end->getTimestamp() - $start->getTimestamp()}
+            <div class="col-7">
+                <progress id="progress" value="0" min="0" max="{$diff}" class="w-100 mt-3" style="cursor: pointer;">
+					<span id="progress-bar"></span>
+                </progress>
+            </div>
+        </div>
+    </div>
+</div>

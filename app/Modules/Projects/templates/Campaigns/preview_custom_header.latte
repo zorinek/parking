@@ -1,0 +1,15 @@
+{block title}
+{_ $lang_file_name . 'title'}
+{/block}
+{block description}
+{_ $lang_file_name . 'description'}
+{/block}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+<a n:href=":Projects:Projects:preview">{_ $lang_file_name . 'projects'}</a>
+<span>  >  </span>
+<a n:href=":Projects:Projects:detail $this->params['presenter']->request->getParameters()['pro_id']">{_ $lang_file_name . 'project_detail'}</a>
+<span>  >  </span>
+{_ $lang_file_name . 'breadcrumb'}
+{/block}

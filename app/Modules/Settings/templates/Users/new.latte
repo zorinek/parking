@@ -1,0 +1,76 @@
+{layout '../../../@layout_protected.latte'}
+{block title}
+{_ users.new.title}
+{/block}
+{block description}
+{_ users.new.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ users.new.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-2">
+            <form n:name="newUserForm" class="needs-validation">
+				<div class="card">
+					<div class="card-header">
+						<h3>{_ users.new.h}</h3>
+					</div>
+					<div class="card-body">
+						<!--<div class="alert alert-danger" id="msg-danger" >-->
+							<!--<li n:foreach="$form->errors as $error">{*$error*}</li>-->
+						<!--</div>-->
+
+
+						<div class="form-group">
+							<label n:name="use_email" class="form-label mt-2">{_ users.new.use_email}</label>
+							<input type="email" class="form-control {if $form['use_email']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="email" n:name="use_email">
+							<div class="invalid-feedback">{$form['use_email']->error}</div>
+						</div>
+						<label n:name="use_passhash" class="form-label mt-2">{_ users.new.use_passhash}</label>
+						<div class="input-group">
+							<input type="password" class="form-control {if $form['use_passhash']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" value="{$form['use_passhash']->value}" id="password" n:name="use_passhash">
+
+							<div class="invalid-feedback">{$form['use_passhash']->error}</div>
+						</div>
+						{if $p_logreg['registration']['name']}
+							<div class="form-group">
+								<label n:name="use_name" class="form-label mt-2">{_ users.new.use_name}</label>
+								<input type="text" class="form-control {if $form['use_name']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="name" n:name="use_name">
+								<div class="invalid-feedback">{$form['use_name']->error}</div>
+							</div>
+						{/if}
+						{if $p_logreg['registration']['phone']}
+							<div class="form-group">
+								<label n:name="use_phone" class="form-label mt-2">{_ users.new.use_phone}</label>
+								<input type="text" class="form-control {if $form['use_phone']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="phone" n:name="use_phone">
+								<div class="invalid-feedback">{$form['use_phone']->error}</div>
+							</div>
+						{/if}
+						<label n:name="use_role" class="form-label mt-2">{_ users.new.use_role}</label>
+						<select class="form-select" n:name="use_role">
+
+						</select>
+						<label n:name="use_active" class="form-label mt-2">{_ users.new.use_active}</label>
+						<select class="form-select" n:name="use_active">
+
+						</select>
+						<div class="form-group form-check my-2">
+							<input type="checkbox" class="form-check-input" id="use_send_pass_mail" n:name="use_send_pass_mail">
+							<label for="use_send_pass_mail" class="form-check-label" n:name="use_send_pass_mail">{_ users.new.use_send_pass_mail}</label>
+							<div class="invalid-feedback">{$form['use_send_pass_mail']->error}</div>
+						</div>
+					</div>
+					<div class="card-footer">
+						<!--<a n:href="in">{_ sign_up.login}</a>-->
+						<button type="submit" n:name="register" class="btn btn-success float-end">{_ users.new.new_button}</button>
+					</div>
+				</div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}

@@ -1,0 +1,86 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ discussion.base.title}
+{/block}
+{block description}
+{_ discussion.base.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ discussion.base.breadcrumb}
+{/block}
+{block content}
+
+{if $p_discussion['auth_users_only'] == true && $user->isLoggedIn() == true}
+    {var $comment = true}
+{elseif $p_discussion['auth_users_only'] == false && $user->isLoggedIn() == true}
+    {var $comment = true}
+{elseif $p_discussion['auth_users_only'] == false && $user->isLoggedIn() == false}    
+    {var $comment = true}
+{else}
+    {var $comment = false}
+{/if}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h1 class=" me-auto">{_ discussion.base.h}</h1>
+                </div>
+                <div class="card-body">
+                    {var $offset = 0}
+                    {foreach $discussion as $line}
+                        {include 'comment.latte', 'line' => $line, 'offset' => 0, 'max_offset' => $p_discussion['max_offset']}
+
+                    {/foreach}
+                    {if empty($discussion)}
+                        {_ discussion.base.no_comment}
+                    {/if}
+                    <hr>
+                    <form n:name="newCommentForm">
+
+
+                        {if $comment }
+
+                            {if !$user->isLoggedIn()}
+                                <div class="mb-3">
+                                    <label n:name="dis_email" class="form-label mt-2">{_ discussion.base.dis_email}</label>
+                                    <input type="text" class="form-control" n:name="dis_email">
+                                </div>
+                            {/if}
+                            {if $p_discussion['use_reply']}
+                                <div id="reply_to" class="d-none">
+                                    <label name="reply_to" class="form-label">{_ discussion.base.reply_to}</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" name="reply_to" id="reply_to_value" disabled>
+                                        <button class="btn btn-outline-secondary" type="button" onclick="removeReply();"><i class="far fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                            {/if}
+                            <div class="mb-3">
+                                <label n:name="dis_message" class="form-label mt-2">{_ discussion.base.dis_message}</label>
+                                <textarea class="form-control" n:name="dis_message" rows="3"></textarea>
+                            </div>
+                            {if $p_discussion['use_captcha']}
+                                <div class="mb-2">
+                                    <label class="form-label" n:name="captcha">{_ discussion.base.captcha} {$captcha['text']}</label>
+                                    <input type="text" class="form-control {if $form['captcha']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="captcha" n:name="captcha" value="">
+                                    <input type="hidden" class="form-control" id="captcha" n:name="captcha_text" value="{$captcha['text']}">
+                                    <div class="invalid-feedback">{$form['captcha']->error}</div>
+                                </div>
+                            {/if}
+                            <input type="hidden" id="reply" n:name="dis_reply">
+                            <button type="submit" class="btn btn-primary float-end"   id="scroll_to" n:name="save_message">{_ discussion.base.save_message}</button>
+                        {else}
+                            {_ discussion.base.message_login}
+                        {/if}
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}

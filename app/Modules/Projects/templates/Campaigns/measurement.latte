@@ -1,0 +1,26 @@
+<div class="input-group mb-3">
+    <label class="input-group-text col-6" for="{$type}count-illegal">{_ sections.process.detected}</label>
+    <!--<button class="btn btn-outline-secondary" type="button" id="{$type}-minus-illegal" {if $campaigns_segments && ($campaigns_segments->cas_done != 2 || $campaigns_segments->use_id != $user->id)}disabled{/if}>-</button>-->
+    <input type="number" class="form-control text-center" id="{$type}-count-detected" placeholder="0" aria-label="" aria-describedby="{$type}count-detected" value="{if isset($campaigns_segments->{'cas_parkingdetected_' . $type_w})}{$campaigns_segments->{'cas_parkingdetected_' . $type_w}}{else}0{/if}" disabled>
+    <!--<button class="btn btn-outline-secondary" type="button" id="{$type}-plus-illegal" {if $campaigns_segments && ($campaigns_segments->cas_done != 2 || $campaigns_segments->use_id != $user->id)}disabled{/if}>+</button>-->
+</div>
+<div class="input-group mb-3">
+    <label class="input-group-text col-6" for="{$type}count-illegal">{_ sections.process.illegal}</label>
+    <button class="btn btn-outline-secondary" type="button" id="{$type}minus-illegal" {if  $campaigns_segments->use_id != $user->id}disabled{/if}>-</button>
+    <input type="number" class="form-control text-center" id="{$type}count-illegal" placeholder="0" aria-label="" aria-describedby="{$type}count-illegal" value="{if isset($campaigns_segments->{'cas_parkingillegal_' . $type_w})}{$campaigns_segments->{'cas_parkingillegal_' . $type_w}}{else}0{/if}" novalidate {if $campaigns_segments->use_id != $user->id}disabled{/if}>
+    <button class="btn btn-outline-secondary" type="button" id="{$type}plus-illegal" {if $campaigns_segments->use_id != $user->id}disabled{/if}>+</button>
+</div>
+
+<div class="input-group mb-3">
+    <label class="input-group-text col-6" for="{$type}count-empty">{_ sections.process.empty}</label>
+    <button class="btn btn-outline-secondary" type="button" id="{$type}minus-empty" {if $campaigns_segments->use_id != $user->id}disabled{/if}>-</button>
+    <input type="number" class="form-control text-center" id="{$type}count-empty" placeholder="0" aria-label="" aria-describedby="{$type}count-empty" value="{if isset($campaigns_segments->{'cas_parkingfree_' . $type_w})}{$campaigns_segments->{'cas_parkingfree_' . $type_w}}{else}0{/if}" novalidate {if $campaigns_segments->use_id != $user->id}disabled{/if}>
+    <button class="btn btn-outline-secondary" type="button" id="{$type}plus-empty" {if $campaigns_segments->use_id != $user->id}disabled{/if}>+</button>
+</div>
+
+<div class="input-group">
+    <label class="input-group-text col-6" for="{$type}count-not">{_ sections.process.not}</label>
+    <button class="btn btn-outline-secondary" type="button" id="{$type}minus-not" {if $campaigns_segments->use_id != $user->id}disabled{/if}>-</button>
+    <input type="number" class="form-control text-center" id="{$type}count-not" placeholder="0" aria-label="" aria-describedby="{$type}count-not" value="{if isset($campaigns_segments->{'cas_parkingnotdetected_' . $type_w})}{$campaigns_segments->{'cas_parkingnotdetected_' . $type_w}}{else}0{/if}" novalidate {if $campaigns_segments->use_id != $user->id}disabled{/if}>
+    <button class="btn btn-outline-secondary" type="button" id="{$type}plus-not" {if $campaigns_segments->use_id != $user->id}disabled{/if}>+</button>
+</div>

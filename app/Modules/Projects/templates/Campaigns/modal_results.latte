@@ -1,0 +1,71 @@
+<div id="next_segment" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+		{form finishSectionForm}
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{_ sections.results.h}</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<div class="modal-body">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th colspan="{if (isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 1) || !isset($user_configuration['measurement'])}3{elseif isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 2}2{/if}">{_ sections.results.values}</th>                            
+							</tr>
+							{dump $user_configuration}
+							<tr>
+								{if (isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 1) || !isset($user_configuration['measurement'])}
+									<th>{_ sections.results.name}</th>
+									<th>{_ sections.results.left}</th>
+									<th>{_ sections.results.right}</th>
+									{elseif isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 2}
+									<th>{_ sections.results.name}</th>
+									<th>{_ sections.results.together}</th>
+									{/if}
+							</tr>
+						</thead>
+						<tbody>
+							{if (isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 1) || !isset($user_configuration['measurement'])}
+								<tr>
+									<th>{_ sections.results.illegal}</th>
+									<td id="modal_illegal_left"><input type="number" n:name="illegal_left" id="illegal_left" class="form-control" novalidate></td>
+									<td id="modal_illegal_right"><input type="number" n:name="illegal_right" id="illegal_right" class="form-control" novalidate></td>
+								</tr>
+								<tr>
+									<th>{_ sections.results.empty}</th>
+									<td id="modal_empty_left"><input type="number" n:name="empty_left" id="empty_left" class="form-control" novalidate></td>
+									<td id="modal_empty_right"><input type="number" n:name="empty_right" id="empty_right" class="form-control" novalidate></td>
+								</tr>
+								<tr>
+									<th>{_ sections.results.not}</th>
+									<td id="modal_not_left"><input type="number" n:name="not_left" id="not_left" class="form-control" novalidate></td>
+									<td id="modal_not_right"><input type="number" n:name="not_right" id="not_right" class="form-control" novalidate></td>
+								</tr>
+							{elseif isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 2}
+								<tr>
+									<th>{_ sections.results.illegal}</th>
+									<td id="modal_illegal"><input type="number" n:name="illegal" id="illegal" class="form-control" novalidate></td>
+								</tr>
+								<tr>
+									<th>{_ sections.results.empty}</th>
+									<td id="modal_empty"><input type="number" n:name="empty" id="empty" class="form-control" novalidate></td>
+								</tr>
+								<tr>
+									<th>{_ sections.results.not}</th>
+									<td id="modal_not"><input type="number" n:name="not" id="not" class="form-control" novalidate></td>
+								</tr>
+							{/if}
+
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">{_ sections.results.button_close}</button>
+					<button type="submit" n:name="next_section" class="btn btn-primary">{_ sections.results.button_next}</button>
+					<button type="submit" n:name="back_to_map" class="btn btn-primary">{_ sections.results.button_map}</button>
+				</div>
+			</div>
+        {/form}
+    </div>
+</div>

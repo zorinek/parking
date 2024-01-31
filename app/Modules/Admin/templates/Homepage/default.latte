@@ -1,0 +1,125 @@
+{layout '../../../@layout_protected.latte'}
+{block title}
+{_ homepage.admin.title}
+{/block}
+{block description}
+{_ homepage.admin.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ homepage.admin.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{_ homepage.admin.h1}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{_ homepage.admin.last_projects}</h4>
+                        </div>
+                        <div class="card-body row">
+                            {foreach $last_projects as $proj}
+                                <div class="col-3">
+                                    <a n:href=":Projects:Projects:detail $proj->pro_id" class="btn btn-primary btn-block w-100 p-4">{$proj->pro_name}</a>
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h4>{_ homepage.admin.my_reservations}</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>{_ projects.detail.reservations.project}</th>
+                                        <th>{_ projects.detail.reservations.campaign}</th>
+                                        <th>{_ projects.detail.reservations.section}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+									{foreach $my_reservations as $res}
+										<tr>
+											<th>
+												{$res->pro_name}
+											</th>
+											<th>
+												{$res->cam_name}
+											</th>
+											<td>
+												<a n:href=":Projects:Campaigns:detail $res->pro_id, $res->cam_id, $res->seg_id">{$res->seg_id}</a>
+											</td>
+											<td>
+												{form removeReservationSegmentForm}
+													<input type="hidden" n:name="seg_id" value="{$res->seg_id}">
+													<input type="hidden" n:name="cam_id" value="{$res->cam_id}">
+													<button type="submit" n:name="remove_reservation_segment" class="btn btn-warning btn-sm">{_ sections.process.button_cancel_reservation}</button>
+												{/form}
+											</td>
+										</tr>
+									{/foreach}
+									{if empty($my_reservations)}
+										<tr>
+											<td colspan="4" class="text-center bg-warning">{_ projects.detail.reservations.not_found}!</td>
+										</tr>
+									{/if}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--<a n:href=":Frontend:Homepage:default">Přejít na frontend</a><br>-->
+                    <!--<a n:href=":Settings:Users:default">Správa uživatelů</a><br>-->
+                    <!--<a n:href=":Contactform:ContactformAdmin:default">Zprávy z kontaktního formuláře</a><br>-->
+                    <!--<a n:href=":Discussion:DiscussionAdmin:default">Komentáře z diskuzí</a><br>-->
+                    <!--<a n:href=":Files:FilesAdmin:preview">Správa souborů</a><br>-->
+                    <!--<a n:href=":Notes:NotesAdmin:notesPreview">Správa poznámek</a><br>-->
+                    <!--<a n:href=":Queries:Queries:preview">Přehled dotazů</a><br>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{if $first_login_modal_enabled && $user_data['use_first_login'] == $first_login_status['notlogged']}
+	<div class="modal fade" id="firstLoginModal" tabindex="-1" aria-labelledby="firstLoginModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="firstLoginModalLabel">První přihlášení</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Vítejte na serveru XXX</p>
+					<p>Můžete zde dělat xxx, yyy, zzz a www.</p>
+					{if is_null($otp_data) && $use_one_time_password}
+						<p>Nemáte nastavena žádná jednorázová hesla, nastavit je můžete ve <a n:href=":Settings:Account:profile">svém profilu</a></p>
+					{/if}
+					{if $two_factor_auth_enabled && $user_data['use_tfa_enabled'] == $two_factor_auth_status['disable']}
+						<p>Nemáte nastaveno dvoufaktorové přihlášení přes Google Authenticator, nastavit jej můžete ve <a n:href=":Settings:Account:profile">svém profilu</a></p>
+					{/if}
+				</div>
+				<div class="modal-footer d-block">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-success float-end" data-bs-dismiss="modal">Pokračovat na web</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}          
+{/block}
+{block scripts}
+{if $first_login_modal_enabled && $user_data['use_first_login'] == $first_login_status['notlogged']}
+	<script>
+		var myModal = new bootstrap.Modal(document.getElementById('firstLoginModal'), {});
+		myModal.show();
+	</script>
+{/if}
+{/block}

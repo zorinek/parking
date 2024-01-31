@@ -1,0 +1,48 @@
+base:
+    title: "Diskuze"
+    description: "Diskuze"
+    breadcrumb: "Diskuze"
+    h: "Diskuze"
+    no_comment: "Nebyl vložen žádný příspěvěk."
+    dis_user: "Uživatel"
+    reply_to: "Odpovídáte na komentář"
+    dis_message: "Zpráva"
+    captcha: "Vepište prosím číslem výsledek následujícího příkladu:"
+    save_message: "Vložit zprávu"
+    error_dis_email: "Prosím vložte váš e-mail!"
+    error_dis_message: "Prosím vložte váši zprávu!"
+    error_captcha: "Prosím vyplňte captchu!"
+    error_source_comment: "Zdrojový komentář nebyl nalezen!"
+    error_captcha_invalid: "Captcha není správně vyplněna!"
+    message_login: "Pro komentování je nutné se přihlásit!"
+
+comment:
+    button_reply: "Odpovědět"
+    reply_to: "Odpověď na"
+    
+email:
+    title: "Nový komentář na webu"
+    hello: "Dobrý den"
+    comment_1: "Na serveru"
+    comment_2: "byla uveřejněna reakce na váš komentář."
+    message: "Její znění je:"
+    display: "Zobrazit si ji můžete pomocí"
+    href: "následujícího odkazu"
+    
+admin:
+    title: "Správa diskuzních příspěvků"
+    description: "Správa diskuzních příspěvků"
+    breadcrumb: "Správa diskuzních příspěvků"
+    h: "Správa diskuzních příspěvků"
+    dis_id: "Id"
+    dis_identificator: "Identifikátor diskuze"
+    use_id: "Id uživatele"
+    dis_email: "E-mail"
+    dis_message: "Zpráva"
+    dis_reply: "Odpověď na"
+    dis_authorized_by: "Schválil"
+    dis_datetimeinsert: "Datum"
+    button_approve: "Schválit"
+    button_disapprove: "Zrušit schválení"
+    remove_question: "Opravdu chcete odstranit tento komentář, včetně všech odpovědí?"
+    

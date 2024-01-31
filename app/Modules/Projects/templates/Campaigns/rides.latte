@@ -1,0 +1,7 @@
+<div class="card">
+    <div class="card-body">
+        {foreach $max_min_times_rides as $key => $ln}
+            <button type="button" onclick="change_ride({$ln[0]}, {$ln[1]}, {$iterator->getCounter()-1});" class="btn btn-primary">{_ sections.process.drives} {$key + 1}</button>
+        {/foreach}
+    </div>
+</div>

@@ -1,0 +1,80 @@
+{layout '../../../@layout_protected.latte'}
+{block title}
+{_ users.detail.title}
+{/block}
+{block description}
+{_ users.detail.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ users.detail.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>{_ users.detail.h}</h1>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            {include 'editUser.latte'}
+                        </div>
+
+                        <div class="col-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2>{_ users.detail.h_management}</h2>
+                                </div>
+                                <div class="card-body">
+                                    <form n:name="managementForm">
+                                        <p><button type="submit" class="btn btn-secondary" n:name="send_reset_password_email">{_ users.detail.button_reset_password}</button></p>
+											{if $two_factor_auth_enabled}
+												{if $user_data->use_tfa_enabled == $two_factor_auth_status['enable']}
+                                                <p>
+                                                    <button type="submit" class="btn btn-danger" n:name="deactivate_tfa">{_ users.detail.button_deactivate_2fa}</button>
+                                                </p>
+                                            {else}
+                                                <p>{_ users.detail.message_deactivated_2fa}</p>
+                                            {/if}  
+                                        {/if}
+                                        <p>
+                                            {if $user_data->use_active == $user_activation_status['activated']}
+                                                <button type="submit" class="btn btn-danger" n:name="deactivate_user">{_ users.detail.button_deactivate_user}</button>
+                                            {else}
+                                                <button type="submit" class="btn btn-success" n:name="activate_user">{_ users.detail.button_activate_user}</button>
+                                            {/if} 
+                                        </p>
+                                        {if $use_one_time_password}
+                                            {if isset($count_unused_otp_passwords->count) && $count_unused_otp_passwords->count != 0}
+                                                <p>
+                                                    {_ users.detail.message_otp_1} {$count_unused_otp_passwords->count} {_ users.detail.message_otp_2} {$count_unused_otp_passwords->uso_valid_to|date:'d.m.Y H:i:s'}
+                                                </p>
+                                                <p>
+                                                    <button type="submit" class="btn btn-danger" n:name="remove_otp_passwords">{_ users.detail.button_remove_otp}</button>
+                                                </p>
+                                            {else}
+                                                <p>{_ users.detail.message_no_otp}</p>
+                                            {/if}
+                                        {/if} 
+                                        {*dump $user_data*}
+                                        {*dump $p_discussion*}
+                                        {if $user_data->use_discussion_authorized == $p_discussion['user_authorized_status']['enabled']}
+                                            <button type="submit" class="btn btn-danger" n:name="remove_discussion_authorization">{_ users.detail.button_remove_discussion_authorization}</button>
+                                        {else}
+                                            <button type="submit" class="btn btn-success" n:name="add_discussion_authorization">{_ users.detail.button_add_discussion_authorization}</button>
+                                        {/if}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

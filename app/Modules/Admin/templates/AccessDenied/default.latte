@@ -1,0 +1,28 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ homepage.title}
+{/block}
+{block description}
+
+{/block}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ homepage.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Přístup zamítnut</h1>
+                </div>
+                <div class="card-body">
+                    <p>Přístup do této části webu byl zamítnut. V případě problému kontaktujte spráce systému</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

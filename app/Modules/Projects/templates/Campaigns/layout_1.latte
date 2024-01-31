@@ -1,0 +1,112 @@
+
+<div class="container-fluid">
+    <div class='row my-3'>
+        <div class="col-8">
+            <div class="row">
+                <div class='col-sm-12 col-md-6'>
+                    {if isset($videos['Left'])}
+                        {include 'video.latte', name => 'sections.process.left_side', video_start => $videos['Left']->vid_start, video_end => $videos['Left']->vid_end, video_name => $videos['Left']->vid_name, id => 'video_left'}
+                    {else}
+                        {_ sections.process.video_not_found}
+                    {/if}
+                </div>
+                <div class='col-sm-12 col-md-6'>
+                    {if isset($videos['Right'])}
+                        {include 'video.latte', name => 'sections.process.right_side', video_start => $videos['Right']->vid_start, video_end => $videos['Right']->vid_end, video_name => $videos['Right']->vid_name, id => 'video_right'}
+                    {else}
+                        {_ sections.process.video_not_found}
+                    {/if}
+                </div>
+            </div>
+            {if count($max_min_times_rides) >= 1}         
+				<div class="row mt-3">
+					<div class="col-sm-12">
+						{include 'rides.latte'}
+					</div>
+				</div>
+            {/if}
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    {include 'play_pause.latte'}
+                </div>
+            </div>
+        </div>
+        <div class='col-sm-4 col-md-4'>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="h5 float-start">{_ sections.process.map}</h4>
+                    <button type="button" class="btn btn-secondary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">?</button>
+                    {if $campaigns_segments && $campaigns_segments->cas_done == 0}
+                        <button type="button" class="btn btn-primary btn-sm float-end me-3" data-bs-toggle="modal" data-bs-target="#segment_reservation">{_ sections.process.button_modal_section_registration}</button>
+                    {/if}
+					<button type="button" class="btn btn-primary btn-sm float-end me-3" data-bs-toggle="modal" data-bs-target="#next_segment">{_ sections.process.button_next_segment}</button>
+                </div>
+                <div class="card-body m-0 p-0" id="map">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row my-3">
+        {if isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 1}
+            <div class="col-sm-4 col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="h5">{_ sections.process.left_side}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                {include 'measurement.latte', type => 'left-', type_w => 'left'}
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-block btn-danger w-100 h-100" id="left-delete" {if $campaigns_segments->use_id != $user->id}disabled{/if}>{_ sections.process.button_reset}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="h5">{_ sections.process.right_side}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                {include 'measurement.latte', type => 'right-', type_w => 'right'}
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-block btn-danger w-100 h-100" id="right-delete" {if $campaigns_segments->use_id != $user->id}disabled{/if}>{_ sections.process.button_reset}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {elseif isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 2}
+            <div class="col-sm-8 col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="h5">{_ sections.process.together}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+							<div class="col-8">
+								{include 'measurement.latte', type => '', type_w => ''}
+							</div>
+							<div class="col-4">
+								<button class="btn btn-block btn-danger w-100 h-100" id="delete" {if $campaigns_segments->use_id != $user->id}disabled{/if}>{_ sections.process.button_reset}</button>
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {/if}
+        <div class="col-sm-4 col-md-4">
+            {include 'notes.latte'}
+            {include 'campaigns.latte'}
+            {include 'informations.latte'}
+        </div>
+    </div>
+</div>

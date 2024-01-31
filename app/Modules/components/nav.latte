@@ -1,0 +1,99 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<div class="container">
+		{if $user->isLoggedIn()}
+			<a class="navbar-brand" n:href=":Admin:Homepage:default locale => $locale">{_ nav.title}</a>
+		{else}
+			<a class="navbar-brand" n:href=":Frontend:Homepage:default locale => $locale">{_ nav.title}</a>
+		{/if}
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				{if $user->isLoggedIn()}
+					{if $user->isInRole('admin')}
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								{_ nav.projects}
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" n:href=":Projects:Projects:new">{_ nav.new_project}</a></li>
+								<li><a class="dropdown-item" n:href=":Projects:Projects:preview">{_ nav.projects_preview}</a></li>
+							</ul>
+						</li>
+					{else}
+						<li class="nav-link"><a class="dropdown-item" n:href=":Projects:Projects:preview">{_ nav.projects_preview}</a></li>
+						{/if}
+
+					<li class="nav-item">
+						<a class="nav-link" n:href=":UsersConfigurations:UsersConfigurations:configuration">{_ nav.configuration}</a>
+					</li>
+
+					<!--        <li class="nav-item dropdown">
+							  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Dropdown
+							  </a>
+							  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" href="#">Action</a></li>
+								<li><a class="dropdown-item" href="#">Another action</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="#">Something else here</a></li>
+							  </ul>
+							</li>-->
+					<!--        <li class="nav-item">
+							  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+							</li>-->
+				{/if}
+			</ul>
+			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+				{if $user->isLoggedIn()}
+					<li class="nav-item">
+						<a class="nav-link" n:href=":Admin:Homepage:help">{_ nav.help}</a>
+					</li>
+				{else}
+					<li class="nav-item">
+						<a class="nav-link" n:href=":Frontend:Homepage:about">{_ nav.about}</a>
+					</li>
+				{/if}
+			</ul>
+			<!--      <form class="d-flex">
+					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-success" type="submit">Search</button>
+				  </form>-->
+			<!--        <ul class="navbar-nav ml-auto">
+						<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="langSwitch" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <img   width="25" height="25" src='{$basePath}/icon/{$locale}.svg'>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="langSwitch">
+						  <a class="dropdown-item" n:href="this locale => cs"><img style='max-height:15px;' src='{$basePath}/icon/cs.svg' alt='{_ nav.lang_czech}' title='{_ nav.lang_czech}'></a>
+						<a class="dropdown-item" n:href="this locale => en"><img style='max-height:15px;' src='{$basePath}/icon/en.svg' alt='{_ nav.lang_english}' title='{_ nav.lang_english}'></a>
+						</div>
+					  </li> 
+					  
+					</ul>-->
+			<ul class="navbar-nav ">
+				{if $user->isLoggedIn() }
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle py-0" href="#" id="settingsMenu" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<img src="{plink :Settings:Account:image}" width="35" height="35" class="rounded-circle">
+						</a>
+						<div class="dropdown-menu" aria-labelledby="settingsMenu">
+							<a class="dropdown-item" n:href=":Settings:Account:profile">{_ nav.my_account}</a>
+							<a class="dropdown-item" n:href=":Admin:Homepage:default">{_ nav.administration}</a>
+							<a class="dropdown-item" n:href=":UsersConfigurations:UsersConfigurations:configuration">{_ nav.configuration}</a>
+							<a class="dropdown-item" n:href=":Notes:Notes:notesPreview">{_ nav.notes}</a>
+							{if $user->isInRole('admin')}
+								<a class="dropdown-item" n:href=":Settings:Users:default">{_ nav.users}</a>
+							{/if}
+							<a class="dropdown-item" n:href=":Login:Login:logout">{_ nav.logout}</a>
+						</div>
+					</li>
+				{else}
+					<li><a n:href=":Login:Login:login">{_ nav.login}</a></li>
+					{/if}
+			</ul>
+
+		</div>
+	</div>
+</nav>

@@ -1,0 +1,50 @@
+<tr>
+    {foreach $search_values as $value}
+        {breakIf $value[0] == "and_or"}
+        <th class="text-center">
+            {var $index = array_search($value[0], $params['order'])}
+            <div>
+                <a href="javascript:void(0);" onclick="my_search();"><i class="fas fa-angle-up asc {if $index !== false && $params['order_dir'][$index] == "asc"}text-secondary{/if}" id="{$value[0]}"></i></a>
+            </div>
+            {_ $lang_file_name . $value[0]}
+            <div>
+                <a href="javascript:void(0);" onclick="my_search();"><i class="fas fa-angle-down desc {if $index !== false && $params['order_dir'][$index] == "desc"}text-secondary{/if}" id="{$value[0]}"></i></a>
+            </div>
+        </th>
+    {/foreach}
+
+    <th><button type="button" onclick="reset_my_search();" class="btn btn-warning btn-sm">{_ preview.reset_search}</button></th>
+</tr>
+<tr>
+    {foreach $search_values as $value}
+        {breakIf $value[0] == "and_or"}
+
+        {if isset($value[3]) && $value[3] && $value[3] !== "link"}
+            <th>
+                <div class="input-group">
+                    <input type="text" class="form-control line" onchange="my_search();" id="{$value[0]}" {if isset($params[$value[0]]) && $params[$value[0]] !== 'null'}value="{$params[$value[0]]}"{/if}>
+                    <div class="input-group-text">
+						<input class="form-check-input mt-0 line check" data-bs-toggle="tooltip" data-bs-placement="top" title="{$value[6]}" type="checkbox" value="" onchange="my_search();" data-id="{$value[0]}" {if isset($params[$value[0]]) && $params[$value[0]] === 'null'}checked{/if}>
+                    </div>
+                </div>
+            </th>
+        {elseif isset($value[3]) && $value[3] === false}
+            <th>
+                <select class="form-select line" onchange="my_search();" id="{$value[0]}">
+                    <option selected value="">Nevybráno</option>
+                    {foreach $parameters[$value[0]] as $key => $ln}
+                        <option value="{$key}" {if isset($params[$value[0]]) && $params[$value[0]] == $key}selected{/if}>{_ $ln}</option>
+                    {/foreach}
+                </select>
+            </th>
+        {else}
+            <th><input type="text" onchange="my_search();" id="{$value[0]}" class="form-control line" {if isset($params[$value[0]])}value="{$params[$value[0]]}"{/if}></th>
+			{/if}
+		{/foreach}
+    <th>
+        <select class="form-control select" id="and_or" name="and_or" onchange="my_search();">
+            <option value="and" {if isset($params['and_or']) && $params['and_or'] == "and"}selected{/if}>{_ preview.and}</option>
+            <option value="or" {if isset($params['and_or']) && $params['and_or'] == "or"}selected{/if}>{_ preview.or}</option>
+        </select>
+    </th>
+</tr>

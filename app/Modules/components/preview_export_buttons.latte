@@ -1,0 +1,28 @@
+<div class="float-end">
+    <div class="btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+			{_ preview.export.button_columns}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-disable-close">
+            {foreach $search_values as $value}
+                {breakIf  $value[0] == "and_or"}
+                <li class="dropdown-item dropdown-item-check">
+                    <input type="checkbox" class="form-check-input sel_cols" novalidate name="{$value[0]}" id="cols_{$value[0]}" checked>
+                    <label class="form-check-label" for="cols_{$value[0]}">{_ $lang_file_name . $value[0]}</label>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            {_ preview.export.button_exports}
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" onclick="export_file({link $exports['url'] 'excel', 'selected'});">{_ preview.export.link_filtered_excel}</a></li>
+            <li><a class="dropdown-item" href="#" onclick="export_file({link $exports['url'] 'pdf', 'selected'});">{_ preview.export.link_filtered_pdf}</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" onclick="export_file({link $exports['url'] 'excel', 'all'});">{_ preview.export.link_all_excel}</a></li>
+            <li><a class="dropdown-item" href="#" onclick="export_file({link $exports['url'] 'pdf', 'all'});">{_ preview.export.link_all_pdf}</a></li>
+        </ul>
+    </div>
+</div>

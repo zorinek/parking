@@ -1,0 +1,33 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ contactform.sended.title}
+{/block}
+{block description}
+{_ contactform.sended.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ contactform.sended.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form n:name="contactformForm">
+                <div class="card">
+                    <div class="card-header">
+                        <h1>{_ contactform.sended.h}</h1>
+                    </div>
+                    <div class="card-body">
+                        {_ contactform.sended.thanks}
+                    </div>
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}

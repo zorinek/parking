@@ -1,0 +1,309 @@
+{layout '../../../@layout_protected.latte'}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ configuration.breadcrumb}
+{/block}
+{block title}
+{_ configuration.title}
+{/block}
+{block description}
+{_ configuration.description}
+{/block}
+{block content}
+
+{var $param = $p_configuration}
+
+<div class="container">
+    <div class='row'>
+        <div class='col-sm-12 col-md-12 '>
+            <form n:name="configurationForm">
+                <div class="card my-3">
+                    <div class="card-header">
+                        <h3 class="float-start">{_ configuration.h}</h3>
+                        <button type="submit" class="btn btn-success float-end" n:name="save_configuration">{_ configuration.button_save}</button>
+                    </div>
+                    <div class="card-body">
+                        <div n:foreach="$form->errors as $error" n:class="alert, 'alert-danger'">{$error|noescape}</div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                {_ configuration.display}
+                            </div>
+                            <div class="card-body">
+                                {var $name = 'layout'}
+                                {if $param['displayed'][$name]}
+                                    <div class="form-group">
+                                        <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                        <select class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+
+                                        </select>
+                                        <div class="invalid-feedback">{$form[$name]->error}</div>
+                                    </div>
+                                {/if}
+                                {var $name = 'measurement'}
+                                {if $param['displayed'][$name]}
+                                    <div class="form-group">
+                                        <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                        <select class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+
+                                        </select>
+                                        <div class="invalid-feedback">{$form[$name]->error}</div>
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        {_ configuration.playing}
+                                    </div>
+                                    <div class="card-body">
+                                        {var $name = 'play_pause'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'speed_up'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'speed_down'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'reset_speed'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        {_ configuration.together_control}
+                                    </div>
+                                    <div class="card-body">
+
+                                        {var $name = 'minus_illegal'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'plus_illegal'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'minus_empty'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'plus_empty'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'minus_not'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'plus_not'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'delete'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        {_ configuration.left_together_control}
+                                    </div>
+                                    <div class="card-body">
+                                        {var $name = 'left_minus_illegal'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'left_plus_illegal'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'left_minus_empty'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'left_plus_empty'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'left_minus_not'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'left_plus_not'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'left_delete'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        {_ configuration.right_together_control}
+                                    </div>
+                                    <div class="card-body">
+                                        {var $name = 'right_minus_illegal'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'right_plus_illegal'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'right_minus_empty'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'right_plus_empty'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'right_minus_not'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'right_plus_not'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                        {var $name = 'right_delete'}
+                                        {if $param['displayed'][$name]}
+                                            <div class="form-group">
+                                                <label n:name="{$name}" class="form-label mt-2">{_ "configuration.$name"}{if $param['required'][$name]} *{/if}</label>
+                                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" {if isset($user_configuration[$name])}value="{$user_configuration[$name]->usc_value}"{/if} id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                                            </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-success float-end" n:name="save_configuration">{_ configuration.button_save}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{/block}
+

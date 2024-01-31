@@ -1,0 +1,1121 @@
+{layout '../../../@layout_protected.latte'}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+<a n:href=":Projects:Projects:preview locale => $locale, pro_id => ''">{_ sections.detail.project_preview}</a>
+<span>  >  </span>
+<a n:href=":Projects:Projects:detail $pro_id">{_ sections.detail.project_detail}</a>
+<span>  >  </span>
+<a n:href=":Projects:Campaigns:preview $pro_id, $cam_id, seg_id =>''">{_ sections.detail.campaign_preview}</a> (<a n:href=":Projects:Campaigns:map $pro_id, $cam_id, seg_id =>''">{_ sections.detail.map}</a>)
+<span>  >  </span>
+{_ sections.detail.section_detail}
+{/block}
+{block title}
+{_ sections.process.title}
+{/block}
+{block description}
+{_ sections.process.description}
+{/block}
+{block head}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+<style>
+    #map {
+        min-height:400px;
+    }
+
+</style>
+{/block}
+{block content}
+{*dump $gps_segments*}
+{if $campaigns_segments && $campaigns_segments->cas_done == 1}
+	<div class="container-fluid">
+		<div class='row my-3'>
+			<div class='col-sm-12 col-md-12'>
+				<div class="alert alert-danger text-center" role="alert">
+					<b>{_ sections.process.section_done_alert}!</b>
+				</div>
+			</div>
+		</div>
+	</div> 
+{elseif $campaigns_segments && $campaigns_segments->cas_done == 0}
+	{include 'modal_reservation.latte'}
+{elseif $campaigns_segments && $campaigns_segments->cas_done == 2 && $campaigns_segments->use_id != $user->id}
+	<div class="container-fluid">
+		<div class='row my-3'>
+			<div class='col-sm-12 col-md-12'>
+				<div class="alert alert-warning text-center" role="alert">
+					<b>{_ sections.process.section_reserverd_other_user_alert}: {$campaigns_segments->ref('use_id')->use_name} ({$campaigns_segments->ref('use_id')->use_email})!</b>
+				</div>
+			</div>
+		</div>
+	</div>
+{elseif $campaigns_segments && $campaigns_segments->cas_done == 2 && $campaigns_segments->use_id == $user->id}
+	<div class="container-fluid">
+		<div class='row my-3'>
+			<div class='col-sm-12 col-md-12'>
+				{form removeReservationForm}
+                    <div class="alert alert-success text-center" role="alert">
+                        <b>{_ sections.process.section_reserverd_this_user_alert}!</b>
+                        <button type="submit" n:name="remove_reservation" class="btn btn-warning btn-sm">{_ sections.process.button_cancel_reservation}</button>
+                    </div>
+				{/form}
+			</div>
+		</div>
+	</div>
+{/if}
+
+{if isset($user_configuration['layout'])}
+	{if $user_configuration['layout']->usc_value == 1}
+		{include "layout_1.latte"}
+	{elseif $user_configuration['layout']->usc_value == 2}
+		{include "layout_2.latte"}
+	{/if}
+{else}
+	{include "layout_1.latte"}
+{/if}
+
+{include 'modal_results.latte'}
+{include 'modal_configuration.latte'}
+{*dump $gps*}
+{/block}
+{block scripts}
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+
+{if isset($videos['Left']) && isset($videos['Right'])}
+	<script>
+		//    $("#next_segment").prependTo("body");
+
+
+		const results = document.getElementById('next_segment');
+		results.addEventListener('show.bs.modal', event => {
+			// do something...
+		{if isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 1 && $campaigns_segments->use_id == $user->id}
+			document.getElementById("illegal_left").value = document.getElementById("left-count-illegal").value;
+			document.getElementById("illegal_right").value = document.getElementById("right-count-illegal").value;
+			document.getElementById("empty_left").value = document.getElementById("left-count-empty").value;
+			document.getElementById("empty_right").value = document.getElementById("right-count-empty").value;
+			document.getElementById("not_left").value = document.getElementById("left-count-not").value;
+			document.getElementById("not_right").value = document.getElementById("right-count-not").value;
+		{elseif isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 2 && $campaigns_segments->use_id == $user->id}
+			document.getElementById("illegal").value = document.getElementById("count-illegal").value;
+			document.getElementById("empty").value = document.getElementById("count-empty").value;
+			document.getElementById("not").value = document.getElementById("count-not").value;
+		{/if}
+
+		});
+
+
+		var videos_all = {$videos_all};
+		var last_lat = "";
+		var last_lon = "";
+		var clicked = false;
+		var max_min_times_rides = {$max_min_times_rides};
+
+		document.getElementById("video_left").addEventListener('ended', (event) => {
+			console.log("STOPPED");
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+			console.log("VIDEO_END", video_left.getAttribute("end"));
+			video_right.pause();
+			var vlpo = video_left.getAttribute("pos");
+
+			console.log("MAX MIN TIMES RIDES", max_min_times_rides[vlpo]);
+			var end_date = new Date(video_left.getAttribute("end"));
+			var seg_end = new Date(max_min_times_rides[vlpo][1]);
+			console.log(end_date);
+			console.log(seg_end);
+			console.log(videos_all);
+			if (seg_end.getTime() > end_date.getTime())
+			{
+				console.log("load_next_video");
+				var lsv = select_video_next(videos_all.Left, end_date, seg_end);
+				console.log("NEXT SELECTED VIDEO LEFT", lsv);
+				video_left.setAttribute("start", lsv.vid_start);
+				video_left.setAttribute("end", lsv.vid_end);
+//        video_left.setAttribute("pos"	, pos);
+				video_left.getElementsByTagName('source')[0].src = {$basePath} + "/video/" + lsv.vid_name;
+				video_left.playbackRate = 1;
+				video_left.load();
+
+				video_right.playbackRate = 1;
+
+				var video_left_speed = document.getElementById("video_left_speed");
+				var video_right_speed = document.getElementById("video_right_speed");
+				video_left_speed.innerHTML = 1;
+				video_right_speed.innerHTML = 1;
+				//        console.log("load_next_video");
+				//        var rsv = select_video_next(videos_all.Right, end_date, seg_end);
+				//        console.log("NEXT SELECTED VIDEO RIGHT", rsv);
+				//        video_right.setAttribute("start", rsv.vid_start);
+				//        video_right.setAttribute("end", rsv.vid_end);
+				//        video_right.getElementsByTagName('source')[0].src = {$basePath} + "/video/" + rsv.vid_name;
+				//        video_right.load();
+			}
+		});
+
+		document.getElementById("video_right").addEventListener('ended', (event) => {
+			console.log("STOPPED RIGHT");
+
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+			console.log("VIDEO_END", video_right.getAttribute("end"));
+			video_left.pause();
+			var vrpo = video_right.getAttribute("pos");
+
+			console.log("MAX MIN TIMES RIDES", max_min_times_rides[vrpo]);
+			var end_date = new Date(video_right.getAttribute("end"));
+			var seg_end = new Date(max_min_times_rides[vrpo][1]);
+			console.log(max_min_times_rides);
+			console.log("END_DATE", end_date);
+			console.log("SEG_END", seg_end);
+			console.log(videos_all);
+			if (seg_end.getTime() > end_date.getTime())
+			{
+			console.log("load_next_video");
+					var rsv = select_video_next(videos_all.Right, end_date, seg_end);
+					console.log("NEXT SELECTED VIDEO RIGHT", rsv);
+					video_right.setAttribute("start", rsv.vid_start);
+					video_right.setAttribute("end", rsv.vi	d_end);
+			video_right.getElementsByTagName('source')[0].src = {$basePath} + "/video/" + rsv.vid_name;
+			video_right.playbackRate = 1;
+			video_right.load();
+
+			video_left.playbackRate = 1;
+
+			var video_left_speed = document.getElementById("video_left_speed");
+			var video_right_speed = document.getElementById("video_right_speed");
+			video_left_speed.innerHTML = 1;
+			video_right_speed.innerHTML = 1;
+			//        console.log("load_next_video");
+			//        var lsv = select_video_next(videos_all.Left, end_date, seg_end);
+			//        console.log("NEXT SELECTED VIDEO LEFT", lsv);
+			//        video_left.setAttribute("start", lsv.vid_start);
+			//        video_left.setAttribute("end", lsv.vid_end);
+			////        video_left.setAttribute("pos", pos);
+			//        video_left.getElementsByTagName('source')[0].src = {$basePath} + "/video/" + lsv.vid_name;
+			//        video_left.load();
+			}
+		});
+
+
+		document.getElementById("progress").addEventListener('click', function (e) {
+			var pos = (e.pageX - this.offsetLeft) / this.offsetWidth;
+			console.log("POSSSSSS", pos);
+
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+			var vlpo = video_left.getAttribute("pos");
+			var vlst = max_min_times_rides[vlpo][0];
+			var vlen = max_min_times_rides[vlpo][1];
+			var diff = (new Date(vlen).getTime() - new Date(vlst).getTime()) / 1000;
+			var time = diff * pos;
+			console.log("TIME", time);
+
+			document.getElementById("progress").value = time;
+			//    console.log(new Date(vlst).getTime()/1000);
+			//    console.log(new Date(vlst).getTime()/1000 + time);
+			//    console.log(video_left.currentTime);
+			//    console.log(start);
+
+			video_left.currentTime = start_left + time;
+			video_right.currentTime = start_right + time;
+			//    document.getElementById("progress-bar").style.width = Math.floor(((video_left.currentTime - start) / mmdif) * 100) + '%';
+			//        video.currentTime = pos * video.duration;
+		});
+
+		//function change_progress()
+		//{
+		//    console.log(event);
+		//    var pos = (event.pageX  - this.offsetLeft) / this.offsetWidth;
+		//
+		////    video.currentTime = pos * video.duration;
+		//}
+
+		function change_ride(start_v, end_v, pos)
+		{
+			console.log("START_V", start_v);
+			console.log("END_V", end_v);
+			console.log(videos_all);
+			var selected_left_video = select_video(videos_all.Left, start_v, end_v);
+			var selected_right_video = select_video(videos_all.Right, start_v, end_v);
+			console.log("SLECTED LEFT ", selected_left_video);
+			console.log("SLECTED RIGHT ", selected_right_video);
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+			video_left.setAttribute("start", selected_left_video.vid_start);
+			video_left.setAttribute("end", selected_left_video.vid_end);
+			video_left.setAttribute("pos", pos);
+			video_right.setAttribute("pos", pos);
+			video_left.getElementsByTagName('source')[0].src = {$basePath} + "/video/" + selected_left_video.vid_name;
+			video_right.getElementsByTagName('source')[0].src = {$basePath} + "/video/" + selected_right_video.vid_name;
+
+			var from = new Date(start_v);
+			//    var to_left = new Date(end);
+
+			var vid_left_start = new Date(selected_left_video.vid_start);
+			var vid_right_start = new Date(selected_right_video.vid_start);
+
+
+			var diff_left = (from.getTime() - vid_left_start.getTime()) / 1000;
+			var diff_right = (from.getTime() - vid_right_start.getTime()) / 1000;
+
+			//    var difference_left = to_left.getTime() - from_left.getTime();
+			//    var seconds_left = Math.floor((difference_left) / (1000));
+			//    var difference_right = to_right.getTime() - from_right.getTime();
+			//    var seconds_right = Math.floor((difference_right) / (1000));
+
+
+
+
+
+			start_left = Math.floor(diff_left);
+			start_right = Math.floor(diff_right);
+			//            console.log("SSSSSS", start);
+
+
+			video_left.load();
+			video_right.load();
+			console.log("HERERERERERERERERER");
+			//    return 10;
+			video_left.currentTime = Math.floor(diff_left);
+			video_right.currentTime = Math.floor(diff_right);
+			last_lat = "";
+			last_lon = "";
+			clicked = true;
+			var progress = document.getElementById("progress");
+			progress.value = 0;
+			var st = new Date(max_min_times_rides[pos][0]);
+			var et = new Date(max_min_times_rides[pos][1]);
+			var mmdif = (et.getTime() - st.getTime()) / 1000;
+			document.getElementById("progress").setAttribute('max', mmdif);
+			document.getElementById("progress-bar").style.width = "0%";
+
+			var video_left_speed = document.getElementById("video_left_speed");
+			var video_right_speed = document.getElementById("video_right_speed");
+			video_left_speed.innerHTML = 1;
+			video_right_speed.innerHTML = 1;
+		}
+
+		function select_video_next(videos_all, start, end)
+		{
+			for (var x in videos_all)
+			{
+				var start_date = new Date(start);
+				console.log("start", start_date.toLocaleString("cs-CZ"));
+				var end_date = new Date(end);
+				console.log("end", end_date.toLocaleString("cs-CZ"));
+				var x_date = new Date(x);
+				console.log("video", x_date.toLocaleString("cs-CZ"));
+				if (start_date.getTime() >= x_date.getTime())
+				{
+					var y_date = new Date(videos_all[x].vid_end);
+					console.log("video end", y_date.toLocaleString("cs-CZ"));
+					if (start_date.getTime() < y_date.getTime())
+					{
+						console.log("Toto video 1");
+						//                console.log(videos_all.Left[x]);
+						return videos_all[x];
+					} else if ((end_date.getTime() < y_date.getTime()))
+					{
+						//                console.log("Toto video");
+						//                console.log(videos_all.Left[x]);
+						return videos_all[x];
+					}
+					//return videos_all[x];
+				}
+			}
+		}
+
+		function select_video(videos_all, start, end)
+		{
+			for (var x in videos_all)
+			{
+				var start_date = new Date(start);
+				console.log("start", start_date.toLocaleString("cs-CZ"));
+				var end_date = new Date(end);
+				console.log("end", end_date.toLocaleString("cs-CZ"));
+				var x_date = new Date(x);
+				console.log("video", x_date.toLocaleString("cs-CZ"));
+				if (start_date.getTime() >= x_date.getTime())
+				{
+					var y_date = new Date(videos_all[x].vid_end);
+					console.log("video end", y_date.toLocaleString("cs-CZ"));
+					if (start_date.getTime() < y_date.getTime())
+					{
+						console.log("Toto video 1");
+						//                console.log(videos_all.Left[x]);
+						return videos_all[x];
+					} else if ((end_date.getTime() < y_date.getTime()))
+					{
+						console.log("Toto video");
+						//                console.log(videos_all.Left[x]);
+						return videos_all[x];
+					}
+
+				}
+
+			}
+			return videos_all[x];
+		}
+
+
+		document.getElementById("playpause").addEventListener('click', function (e)
+		{
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+			if (video_left.paused || video_left.ended)
+			{
+				video_left.play();
+				video_right.play();
+			} else
+			{
+				video_left.pause();
+				video_right.pause();
+			}
+			clicked = false;
+		});
+
+
+		document.getElementById("stop").addEventListener('click', function (e)
+		{
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+
+			var progress = document.getElementById("progress");
+			video_left.pause();
+					video_right.p	ause();
+			var from_left = new Date({$videos['Left']->vid_start->format('Y-m-d H:i:s	.u')});
+			var to_left = new Date({$max_min_time['min_time']->format('Y-m-d H:i:s	.u')});
+			var from_right = new Date({$videos['Right']->vid_start->format('Y-m-d H:i:s	.u')});
+			var to_right = new Date({$max_min_time['min_time']->format('Y-m-d H:i:s.u')});
+
+			var difference_left = to_left.getTime() - from_left.getTime();
+			var seconds_left = Math.floor((difference_left) / (1000));
+			var difference_right = to_right.getTime() - from_right.getTime();
+			var seconds_right = Math.floor((difference_right) / (1000));
+
+
+			video_left.currentTime = start_left;
+			video_right.currentTime = start_right;
+			progress.value = 0;
+		});
+
+		document.getElementById("back_10").addEventListener('click', function (e)
+		{
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+
+			var progress = document.getElementById("progress");
+			video_left.pause();
+			video_right.pause();
+
+			video_left.currentTime = video_left.currentTime - 10;
+			video_right.currentTime = video_right.currentTime - 10;
+			progress.value = 0;
+		});
+
+		document.getElementById("back_5").addEventListener('click', function (e)
+		{
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+
+			var progress = document.getElementById("progress");
+			video_left.pause();
+			video_right.pause();
+
+			video_left.currentTime = video_left.currentTime - 5;
+			video_right.currentTime = video_right.currentTime - 5;
+			progress.value = 0;
+		});
+
+		document.getElementById("next_5").addEventListener('click', function (e)
+		{
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+
+			var progress = document.getElementById("progress");
+			video_left.pause();
+			video_right.pause();
+
+			video_left.currentTime = video_left.currentTime + 5;
+			video_right.currentTime = video_right.currentTime + 5;
+			progress.value = 0;
+		});
+
+		document.getElementById("next_10").addEventListener('click', function (e)
+		{
+			var video_left = document.getElementById("video_left");
+			var video_right = document.getElementById("video_right");
+
+			var progress = document.getElementById("progress");
+			video_left.pause();
+			video_right.pause();
+
+			video_left.currentTime = video_left.currentTime + 10;
+			video_right.currentTime = video_right.currentTime + 10;
+			progress.value = 0;
+		});
+
+
+		var last_marker_time = "";
+		var mainmarker = "";
+
+		window.addEventListener("keydown", () => {
+		console.log(event);
+				if (event.key === {$user_configuration['play_pause']->usc_value})
+		{
+		event.preventDefault();
+				var video_left = document.getElementById("video_left");
+				var video_right = document.getElementById("video_right");
+				if (video_left.paused === true)
+		{
+		video_left.play();
+				video_right.play();
+		} else
+		{
+		video_left.pause();
+				video_right.pause();
+		}
+		clicked = fal	se;
+		} else if (event.key === {$user_configuration['speed_up']->usc_value})
+		{
+		var video_left = document.getElementById("video_left");
+				var video_right = document.getElementById("video_right");
+				var video_left_speed = document.getElementById("video_left_speed");
+				var video_right_speed = document.getElementById("video_right_speed");
+				if (video_left.playbackRate >= 1)
+		{
+		if (video_left.playbackRate + 0.5 <= 8)
+		{
+		video_left.playbackRate += 0.5;
+				video_right.playbackRate += 0.5;
+				video_left_speed.innerHTML = video_left.playbackRate;
+				video_right_speed.innerHTML = video_right.playbackRate;
+		}
+		} else
+		{
+		video_left.playbackRate = Math.round((video_left.playbackRate + 0.1) * 10) / 10;
+				video_right.playbackRate = Math.round((video_right.playbackRate + 0.1) * 10) / 10;
+				video_left_speed.innerHTML = video_left.playbackRate;
+				video_right_speed.innerHTML = video_right.playbackRate;
+		}
+		} else if (event.key === {$user_configuration['speed_down']->usc_value})
+		{
+		var video_left = document.getElementById("video_left");
+				var video_right = document.getElementById("video_right");
+				var video_left_speed = document.getElementById("video_left_speed");
+				var video_right_speed = document.getElementById("video_right_speed");
+				if (video_left.playbackRate > 1)
+		{
+		video_left.playbackRate -= 0.5;
+				video_right.playbackRate -= 0.5;
+				video_left_speed.innerHTML = video_left.playbackRate;
+				video_right_speed.innerHTML = video_right.playbackRate;
+		} else
+		{
+		if (Math.round((video_left.playbackRate - 0.1) * 10) / 10 > 0)
+		{
+		video_left.playbackRate = Math.round((video_left.playbackRate - 0.1) * 10) / 10;
+				video_right.playbackRate = Math.round((video_right.playbackRate - 0.1) * 10) / 10;
+				video_left_speed.innerHTML = video_left.playbackRate;
+				video_right_speed.innerHTML = video_right.playbackRate;
+		}
+		}
+		} else if (event.key === {$user_configuration['reset_speed']->usc_value})
+		{
+		var video_left = document.getElementById("video_left");
+				var video_right = document.getElementById("video_right");
+				var video_left_speed = document.getElementById("video_left_speed");
+				var video_right_speed = document.getElementById("video_right_speed");
+				video_left.playbackRate = 1.0;
+				video_right.playbackRate = 1.0;
+				video_left_speed.innerHTML = video_left.playbackRate;
+				video_right_speed.innerHTML = video_right.playbackRate;
+		}
+		})
+
+				var played = 0;
+				var start_left = 0;
+				var start_right = 0;
+				document.getElementById("video_left").addEventListener('timeupdate', (event) => {
+		console.log(event);
+				console.log("MOVE MARKER");
+				var video_left = document.getElementById("video_left");
+				var video_right = document.getElementById("video_r	ight");
+				var start_time = {$max_min_time['min_time']->format	('c')};
+				var end_time = {$max_min_time['max_time']->format('c')};
+				//        var video_start_time = {$videos['Left']->vid_start->format('c')};
+				var video_start_time = {$videos['Left']->vid_start->format('c')};
+				//        console.log("VIDEO START TIME", video_start_time);
+				console.log("END_TIME: ", end_time);
+				var h = start_time.split("+");
+				h = h[1].split(":");
+				h = parseInt(h[0]);
+				var e = end_time.split("+");
+				e = e[1].split(":");
+				e = parseInt(e[0]);
+				var vh = video_start_time.split("+");
+				vh = vh[1].split(":");
+				vh = parseInt(vh[0]);
+				//        console.log("HHH", h);
+				//        console.log(video_left.currentTime);
+				var dt = new Date(start_time).getTime() / 1000 + (h * 3600);
+				var et = (new Date(end_time).getTime() / 1000 + (e * 3600)) * 1000;
+				var vt = new Date(video_start_time).getTime() / 1000 + (vh * 3600);
+				//        console.log("DT", dt)
+				var nt = dt - vt;
+				//        console.log("NT", nt);
+				var time = Math.round((dt + (video_left.currentTime - nt)) * 1000);
+				//        var time = dt*1000;
+				var ca = Object.keys(coords);
+				//        console.log(ca);
+
+				//        console.log("IND", ind);
+				//        console.log(time);
+				//        console.log(coords[ind]);
+				//        console.log(last_marker_time);
+				//        console.log(coords);
+				//        console.log("ET: ", et);
+
+
+				var video_start = video_left.getAttribute("start");
+				var video_end = video_left.getAttribute("end");
+				console.log("VIDEO_START", video_start);
+				console.log("VIDEO_CURRENT_TIME", video_left.currentTime);
+				//        start = video_left.currentTime;
+				var dt_start = (new Date(video_start).getTime() / 1000) + video_left.currentTime;
+				//        var dt_end = (new Date(video_end).getTime()/1000) ;
+				console.log("DT_STA", Math.round(dt_start * 1000));
+				//        console.log("DT_END", Math.round(dt_end*1000));
+				console.log("TIME", time);
+				var ind = ca.find(function (number) {
+				//                console.log((((new Date(number).getTime()/1000) + (h * 3600)) * 1000));
+				//                console.log(time);
+				if ((((new Date(number).getTime() / 1000)) * 1000) > Math.round(dt_start * 1000))
+				{
+				//                    console.log("HUHUHUHU");
+				return new Date(number).getTime();
+				}
+
+				});
+				console.log("IND", ind);
+				var pos = video_left.getAttribute("pos");
+				console.log("POS", pos);
+				console.log("max_min_times_rides", max_min_times_rides[pos]);
+				var dt_end = (new Date(max_min_times_rides[pos][1]).getTime() / 1000);
+				console.log("DT_END", Math.round(dt_end * 1000));
+				if (coords[ind] !== undefined)
+		{
+		var newLatLng = new L.LatLng(coords[ind][0], coords[ind][1]);
+				mainmarker.setLatLng(newLatLng);
+				document.getElementById("gps_position").innerHTML = coords[ind][0] + ", " + coords[ind][1];
+		} else
+		{
+		video_left.pause();
+				video_right.pause();
+		}
+		//        if(ind == last_marker_time)
+		//        if(coords[ind][0] == last_lat && coords[ind][1] == last_lon)
+		if (Math.round(dt_start) >= Math.round(dt_end))
+		{
+		video_left.pause();
+				video_right.pause();
+				//            var options = { keyboard: false};
+				//            var modal = new bootstrap.Modal(document.getElementById('next_segment'), options);
+				//            modal.show();
+
+
+				//            document.getElementById("illegal_left").innerHTML = document.getElementById("left-count-illegal").value;
+				//            document.getElementById("illegal_right").innerHTML = document.getElementById("right-count-illegal").value;
+				//            document.getElementById("empty_left").innerHTML = document.getElementById("left-count-empty").value;
+				//            document.getElementById("empty_right").innerHTML = document.getElementById("right-count-empty").value;
+				//            document.getElementById("not_left").innerHTML = document.getElementById("left-count-not").value;
+				//            document.getElementById("not_right").innerHTML = document.getElementById("right-count-not").value;
+
+				//            if(!clicked)
+				//            {
+				document.getElementById("illegal_left").value = document.getElementById("left-count-illegal").value;
+				document.getElementById("illegal_right").value = document.getElementById("right-count-illegal").value;
+				document.getElementById("empty_left").value = document.getElementById("left-count-empty").value;
+				document.getElementById("empty_right").value = document.getElementById("right-count-empty").value;
+				document.getElementById("not_left").value = document.getElementById("left-count-not").value;
+				document.getElementById("not_right").value = document.getElementById("right-count-not").value;
+				$('#next_segment').appendTo("body").modal('show');
+				//            }
+
+		}
+		last_marker_time = ind;
+				last_lat = coords[ind][0];
+				last_lon = coords[ind][1];
+				//        var video_right = document.getElementById("video_right");
+				//
+				//        var from_left = new Date({$videos['Left']->vid_start->format('Y-m-d H:i:s.u')});
+				//        var to_left = new Date({$max_min_time['min_time']->format('Y-m-d H:i:s.u')});
+				//        var from_right = new Date({$videos['Right']->vid_start->format('Y-m-d H:i:s.u')});
+				//        var to_right = new Date({$max_min_time['min_time']->format('Y-m-d H:i:s.u')});
+				//
+				//        var difference_left = to_left.getTime() - from_left.getTime();
+				//        var seconds_left = Math.floor((difference_left) / (1000));
+				//        var difference_right = to_right.getTime() - from_right.getTime();
+				//        var seconds_right = Math.floor((difference_right) / (1000));
+				//        var video_left = document.getElementById("video_left");
+				//        var vl = video_left.currentTime;
+				//        var video_right = document.getElementById("video_right");
+				//        var vr = video_right.currentTime;
+				//         
+				//        if((vl - vr) >= 0.05)
+				//        {
+				//            video_left.pause();
+				//            video_right.pause();
+				//            video_right.currentTime = video_left.currentTime;
+				//            video_left.play();
+				//            video_right.play();
+				//        }
+				//        else if((vr - vl) >= 0.05)
+				//        {
+				//            video_left.pause();
+				//            video_right.pause();
+				//            video_left.currentTime = video_right.currentTime;
+				//            video_left.play();
+				//            video_right.play();
+				//        }
+
+				var vlst = video_left.getAttribute("start");
+				var vlet = video_left.getAttribute("end");
+				var vlpo = video_left.getAttribute("pos");
+				var st = new Date(vlst);
+				var et = new Date(vlet);
+				var mmdif = (et.getTime() - st.getTime()) / 1000;
+				//        var diff_left = (st.getTime() - vid_left_start.getTime()) /1000;
+				var dt = new Date(max_min_times_rides[pos][0]);
+				var df = st.getTime() - dt.getTime();
+				console.log("PROGRESS", video_left.currentTime - start_left);
+				console.log("START", start_left);
+				var pv = document.getElementById("progress").value;
+				//        document.getElementById("progress").value = pv 
+				document.getElementById("progress").value = video_left.currentTime - start_left;
+				document.getElementById("progress-bar").style.width = Math.floor(((video_left.currentTime - start_left) / mmdif) * 100) + '%';
+				//        var video_left = document.getElementById("video_left");
+				//        var video_right = document.getElementById("video_right");
+				//        video_left.setAttribute("start", selected_left_video.vid_start);
+				//        video_left.setAttribute("end", selected_left_video.vid_end);
+				////        video_left.setAttribute("pos", pos);
+				//        video_left.getElementsByTagName('source')[0].src = {$basePath} + "/video/" + selected_left_video.vid_name;
+				//        video_right.getElementsByTagName('source')[0].src = {$basePath} + "/video/" + selected_right_video.vid_name;
+				//var from = new Date(start);
+				//        
+				//    //    var to_left = new Date(end);
+				//
+				//        var vid_left_start = new Date(selected_left_video.vid_start);
+				//        var vid_right_start = new Date(selected_right_video.vid_start);
+				//    //    var from_right = new Date({$videos['Right']->vid_start->format('Y-m-d H:i:s.u')});
+				//        var to_right = new Date({$max_min_time['min_time']->format('Y-m-d H:i:s.u')});
+				//
+				//        var diff_left = (from.getTime() - vid_left_start.getTime()) /1000;
+				//        var diff_right = (from.getTime() - vid_right_start.getTime()) /1000;
+
+		});
+	</script>
+{/if}
+{if isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 1 && $campaigns_segments->use_id == $user->id}
+	<script>
+
+				window.addEventListener("keydown", () => {
+
+				if (event.key === {$user_configuration['left_minus_illegal']->usc_value})
+				{
+				document.getElementById("left-count-illegal").value--;
+				} else if (event.key === {$user_configuration['left_plus_illegal']->usc_value})
+				{
+				document.getElementById("left-count-illegal").value++;
+				} else if (event.key === {$user_configuration['left_minus_empty']->usc_value})
+				{
+				document.getElementById("left-count-empty").value--;
+				} else if (event.key === {$user_configuration['left_plus_empty']->usc_value})
+				{
+				document.getElementById("left-count-empty").value++;
+				} else if (event.key === {$user_configuration['left_minus_not']->usc_value})
+				{
+				document.getElementById("left-count-not").value--;
+				} else if (event.key === {$user_configuration['left_plus_not']->usc_value})
+				{
+				document.getElementById("left-count-not").value++;
+				} else if (event.key === {$user_configuration['right_minus_illegal']->usc_value})
+				{
+				document.getElementById("right-count-illegal").value--;
+				} else if (event.key === {$user_configuration['right_plus_illegal']->usc_value})
+				{
+				document.getElementById("right-count-illegal").value++;
+				} else if (event.key === {$user_configuration['right_minus_empty']->usc_value})
+				{
+				document.getElementById("right-count-empty").value--;
+				} else if (event.key === {$user_configuration['right_plus_empty']->usc_value})
+				{
+				document.getElementById("right-count-empty").value++;
+				} else if (event.key === {$user_configuration['right_minus_not']->usc_value})
+				{
+				document.getElementById("right-count-not").value--;
+				} else if (event.key === {$user_configuration['right_plus_not']->usc_value})
+				{
+				document.getElementById("right-count-not").value++;
+				} else if (event.key === {$user_configuration['left_delete']->usc_value})
+				{
+				document.getElementById("left-count-illegal").value = 0;
+						document.getElementById("left-count-empty").value = 0;
+						document.getElementById("left-count-not").value = 0;
+				} else if (event.key === {$user_configuration['right_delete']->usc_value})
+				{
+				document.getElementById("right-count-illegal").value = 0;
+						document.getElementById("right-count-empty").value = 0;
+						document.getElementById("right-count-not").value = 0;
+				}
+				})
+
+				var minus = document.getElementById("left-minus-illegal");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("left-count-illegal").value--;
+		});
+		}
+
+		var plus = document.getElementById("left-plus-illegal");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("left-count-illegal").value++;
+		});
+		}
+
+		var minus = document.getElementById("left-minus-empty");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("left-count-empty").value--;
+		});
+		}
+
+		var plus = document.getElementById("left-plus-empty");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("left-count-empty").value++; });
+		}
+
+		var minus = document.getElementById("left-minus-not");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("left-count-not").value--; });
+		}
+
+		var plus = document.getElementById("left-plus-not");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("left-count-not").value++;
+		});
+		}
+
+		var minus = document.getElementById("right-minus-illegal");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("right-count-illegal").value--;
+		});
+		}
+
+		var plus = document.getElementById("right-plus-illegal");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("right-count-illegal").value++;
+		});
+		}
+
+		var minus = document.getElementById("right-minus-empty");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("right-count-empty").value--;
+		});
+		}
+
+		var plus = document.getElementById("right-plus-empty");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("right-count-empty").value++;
+		});
+		}
+
+		var minus = document.getElementById("right-minus-not");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("right-count-not").value--;
+		});
+		}
+
+		var plus = document.getElementById("right-plus-not");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("right-count-not").value++;
+		});
+		}
+
+		var left = document.getElementById("left-delete");
+				if (left)
+		{
+		left.addEventListener("click", () => {
+		document.getElementById("left-count-illegal").value = 0;
+				document.getElementById("left-count-empty").value = 0;
+				document.getElementById("left-count-not").value = 0;
+		});
+		}
+
+		var right = document.getElementById("right-delete");
+				if (right)
+		{
+		right.addEventListener("click", () => {
+		document.getElementById("right-count-illegal").value = 0;
+				document.getElementById("right-count-empty").value = 0;
+				document.getElementById("right-count-not").value = 0;
+		});
+		}
+	</script>
+{elseif isset($user_configuration['measurement']) && $user_configuration['measurement']->usc_value == 2 && $campaigns_segments->use_id == $user->id}
+	<script>
+
+		window.addEventListener("keydown", () => {
+
+		if (event.key === {$user_configuration['minus_illegal']->usc_value})
+		{
+		document.getElementById("count-illegal").value--;
+		} else if (event.key === {$user_configuration['plus_illegal']->usc_value})
+		{
+		document.getElementById("count-illegal").value++;
+		} else if (event.key === {$user_configuration['minus_empty']->usc_value})
+		{
+		document.getElementById("count-empty").value--;
+		} else if (event.key === {$user_configuration['plus_empty']->usc_value})
+		{
+		document.getElementById("count-empty").value++;
+		} else if (event.key === {$user_configuration['minus_not']->usc_value})
+		{
+		document.getElementById("count-not").value--;
+		} else if (event.key === {$user_configuration['plus_not']->usc_value})
+		{
+		document.getElementById("count-not").value++;
+		} else if (event.key === {$user_configuration['delete']->usc_value})
+		{
+		document.getElementById("count-illegal").value = 0;
+				document.getElementById("count-empty").value = 0;
+				document.getElementById("count-not").value = 0;
+		}
+		})
+
+				var minus = document.getElementById("minus-illegal");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("count-illegal").value--;
+		});
+		}
+
+		var plus = document.getElementById("plus-illegal");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("count-illegal").value++;
+		});
+		}
+
+		var minus = document.getElementById("minus-empty");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("count-empty").value--;
+		});
+		}
+
+		var plus = document.getElementById("plus-empty");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("count-empty").value++;
+		});
+		}
+
+		var minus = document.getElementById("minus-not");
+				if (minus)
+		{
+		minus.addEventListener("click", () => {
+		document.getElementById("count-not").value--;
+		});
+		}
+
+		var plus = document.getElementById("plus-not");
+				if (plus)
+		{
+		plus.addEventListener("click", () => {
+		document.getElementById("count-not").value++;
+		});
+		}
+
+
+		var all = document.getElementById("delete");
+				if (all)
+		{
+		all.addEventListener("click", () => {
+		document.getElementById("count-illegal").value = 0;
+				document.getElementById("count-empty").value = 0;
+				document.getElementById("count-not").value = 0;
+		});
+		}
+
+	</script>
+{/if}
+{if isset($videos['Left']) && isset($videos['Right'])}
+	<script>
+		var tiles = L.tileLayer('https://{ s}.tile.openstreetmap.org/{ z}/{ x}/{ y}.png', {
+		maxZoom: 19,
+				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+		});
+				var map = L.map('map', {
+				layers: [tiles]
+				}).setView([50, 16], 7);
+				//        console.log({$segment->seg_coordinates})
+//  		  
+
+				var coords = {$gps};
+				var coords_rides = {$gps_segments};
+				console.log(coords);
+				console.log("COORDS_RIDES", coords_rides);
+				var markers = L.featureGroup();
+				var markers_original = L.featureGroup();
+				//        var markers_bound();
+				var marker = "";
+				var col = "";
+				var longitudinal = L.layerGroup();
+				var perpendicular = L.layerGroup();
+				var obliqueindir = L.layerGroup();
+				var obliqueoppositedir = L.layerGroup();
+				var baseMaps = {
+
+				};
+				var overlayMaps = [
+						//            "Podélné parkování"  longitudinal,
+						//            "Příčné parkování": perpendicular,
+						//            "Šikmé parkování ve směru": obliqueindir,
+						//            "Šikmé parkování v protisměru": obliqueoppositedir,
+						//            "GPS body": markers,
+						//            "Síťové body": markers_original
+				];
+				overlayMaps["<span style='background-color:red;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Podélné parkování"] = longitudinal;
+				overlayMaps["<span style='background-color:black;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Příčné parkování"] = perpendicular;
+				overlayMaps["<span style='background-color:blue;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Šikmé parkování ve směru"] = obliqueindir;
+				overlayMaps["<span style='background-color:violet;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Šikmé parkování v protisměru"] = obliqueoppositedir;
+				overlayMaps["<span style='background-color:green;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> GPS body"] = markers;
+				overlayMaps["<span style='background-color:lightblue;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Síťové body"] = markers_original;
+				var cnt = 1;
+				for (var x in coords_rides)
+		{
+		var markers_rides = L.featureGroup();
+				overlayMaps["GPS body " + cnt + ". průjezd"] = markers_rides;
+				cnt++;
+				for (var y in coords_rides[x])
+		{
+		var marker = L.circleMarker([coords_rides[x][y][0], coords_rides[x][y][1]], { radius: 2, color: "green"}).bindPopup(coords_rides[x][y][2]);
+				marker.addTo(markers_rides);
+		}
+		}
+		var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+				for (var x in coords)
+		{
+		if (coords[x][3] !== undefined)
+		{
+		if (coords[x][5] == "Longitudinal")
+		{
+		col = "red";
+				marker = L.circleMarker([coords[x][0], coords[x][1]], { radius: 2, color: col}).bindPopup(coords[x][2] + "<br>Car detected<br>RZ:" + coords[x][4] + "<br>Typ parkování: " + coords[x][5]);
+				marker.addTo(longitudinal);
+		} else if (coords[x][5] == "Perpendicular")
+		{
+		col = "black";
+				marker = L.circleMarker([coords[x][0], coords[x][1]], { radius: 2, color: col}).bindPopup(coords[x][2] + "<br>Car detected<br>RZ:" + coords[x][4] + "<br>Typ parkování: " + coords[x][5]);
+				marker.addTo(perpendicular);
+		} else if (coords[x][5] == "ObliqueInDir")
+		{
+		col = "blue";
+				marker = L.circleMarker([coords[x][0], coords[x][1]], { radius: 2, color: col}).bindPopup(coords[x][2] + "<br>Car detected<br>RZ:" + coords[x][4] + "<br>Typ parkování: " + coords[x][5]);
+				marker.addTo(obliqueindir);
+		} else if (coords[x][5] = "ObliqueOppositeDir")
+		{
+		col = "violet";
+				marker = L.circleMarker([coords[x][0], coords[x][1]], { radius: 2, color: col}).bindPopup(coords[x][2] + "<br>Car detected<br>RZ:" + coords[x][4] + "<br>Typ parkování: " + coords[x][5]);
+				marker.addTo(obliqueoppositedir);
+		}
+
+		}
+		//            else
+		//            {
+		marker = L.circleMarker([coords[x][0], coords[x][1]], { radius: 2, color: "green"}).bindPopup(coords[x][2]);
+				//            }
+
+				marker.addTo(markers);
+		}
+		longitudinal.addTo(map);
+				perpendicular.addTo(map);
+				obliqueindir.addTo(map);
+				obliqueoppositedir.addTo(map);
+				//        var group = L.featureGroup(markers).addTo(map);
+				map.fitBounds(markers.getBounds());
+				//
+				var coords_seg = {$segment->seg_coordinates};
+				//        
+				var ce = coords_seg.split(',');
+				for (var x in ce)
+		{
+		var ces = ce[x].split(" ");
+				var marker = L.circleMarker(ces, { radius: 2, color: "lightblue"})
+				.bindPopup('<b>Hello world!</b><br />I am a popup.');
+				marker.addTo(markers_original);
+		}
+
+		//        var group = L.featureGroup(markers).addTo(map);
+		map.fitBounds(markers_original.getBounds());
+				//        console.log("DATE", new Date("2021-09-07T09:59:46+02:00").getTime());
+				//        console.log(coords["2021-09-07 09:59:46.000000"]);
+				//        console.log({$max_min_time['min_time']->format('Y-m-d H:i:s.u')});
+				mainmarker = L.circleMarker([coords[{$max_min_time['min_time']->format('Y-m-d H:i:s.u')}][0], coords[{$max_min_time['min_time']->format('Y-m-d H:i:s.u')}][1]], { radius: 15, color: "black", zIndexOffset: -1000});
+				mainmarker.addTo(map);
+				window.addEventListener("load", () => {
+				console.log("loaded");
+						var video_left = document.getElementById("video_left");
+						var video_right = document.getElementById("vide	o_right");
+						var from_left = new Date({$videos['Left']->vid_start->format('Y-m-d H	:i:s.u')});
+						var to_left = new Date({$max_min_time['min_time']->format('Y-m-d H	:i:s.u')});
+						var from_right = new Date({$videos['Right']->vid_start->format('Y-m-d H	:i:s.u')});
+						var to_right = new Date({$max_min_time['min_time']->format('Y-m-d H:i:s.u')});
+						var difference_left = to_left.getTime() - from_left.getTime();
+						var seconds_left = Math.floor((difference_left) / (1000));
+						var difference_right = to_right.getTime() - from_right.getTime();
+						var seconds_right = Math.floor((difference_right) / (1000));
+						start_left = seconds_left;
+						start_right = seconds_right;
+						video_left.currentTime += seconds_left;
+						video_right.currentTime += seconds_right;
+						//            last_marker_time = {$max_min_time['min_time']->format('Y-m-d H:i:s.u')};
+		{if $campaigns_segments && $campaigns_segments->cas_done == 0 && is_null($campaigns_segments->use_id)}
+				$('#segment_reservation').appendTo("body").modal('show');
+		{/if}
+				var st = new Date({$max_min_time['min_time']->format('Y-m	-d H:i:s.u')});
+						var et = new Date({$max_min_time['max_time']->format('Y-m-d H:i:s.u')});
+						var mmdif = (et.getTime() - st.getTime()) / 1000;
+						//                document.getElementById("progress").setAttribute('max', mmdif);
+				})
+	</script>
+{/if}
+{/block}

@@ -1,0 +1,29 @@
+{layout '../../../@layout_protected.latte'}
+{block title}
+{_ homepage.title}
+{/block}
+{block description}
+
+{/block}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ homepage.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Správa uživatelů</h1>
+                </div>
+                <div class="card-body">
+                    <a n:href=":Settings:Users:preview">Přehled uživatelů</a><br>
+                    <a n:href=":Settings:Users:new">Nový uživatel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

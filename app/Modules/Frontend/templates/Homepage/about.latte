@@ -1,0 +1,28 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ about.title}
+{/block}
+{block description}
+
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ about.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{_ about.h1}</h3>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

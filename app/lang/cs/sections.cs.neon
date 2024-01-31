@@ -1,0 +1,77 @@
+process:
+    h1: "Segment"
+    title: "Segment"
+    description: "Segment"
+    breadcrumb: "Segment"
+    left_side: "Levá strana"
+    right_side: "Pravá strana"
+    map: "Mapa"
+    button_reset: "Vynulovat"
+    together: "Společné sčítání"
+    informations: "Informace"
+    detected: "Detekovaná vozidla"
+    illegal: "Nelegální stání"
+    empty: "Volná místa"
+    not: "Nezaznamenaná vozidla"
+    section_done_alert: "Tento segment v této kampani již byl zpracován"
+    section_reserverd_other_user_alert: "Tento segment v této kampani je rezervován ke zpracování uživatelem"
+    section_reserverd_this_user_alert: "Tento segment v této kampani je rezervován vámi, zpracujte jej prosím"
+    button_cancel_reservation: "Zrušit rezervaci"
+    player_speed: "Rychlost přehrávání"
+    button_modal_section_registration: "Řešit segment"
+    button_next_segment: "Výsledky a další segment"
+    drives: "Průjezd č."
+    play_pause: "Přehrát / Zastavit"
+    stop: "Stop"
+    video_not_found: "Video nenalezeno"
+    
+detail:
+    project_preview: "Všechny projekty"
+    project_detail: "Detail projektu"
+    campaign_preview: "Přehled kampaně"
+    section_detail: "Detail segmentu"
+    map: "Mapa"
+reservation:
+    h: "Rezervace segmentu pro řešení"
+    question: "Chcete označit tento segment jako vámi řešený"
+    button_next_section: "Pokračovat na další segment"
+    button_cancel: "Zrušit"
+    button_reservation: "Označit jako mnou řešený"
+    reserved_by_me: "Rezervováno vámi"
+
+cas_done:
+    0: "Nezpracováno"
+    1: "Zpracováno"
+    2: "Rezervováno"
+
+informations:
+    section_status: "Stav segmentu"
+    gps_position: "Aktuální GPS pozice"
+    street: "Ulice"
+    project_name: "Název projektu"
+    campaign_name: "Název kampaně"
+    section_number: "Číslo úseku"
+    user_reservation: "Rezervováno uživatelem"
+
+campaigns:
+    h: "Výsledky předchozích kampaní"
+    together: "Dohromady"
+    left: "Vlevo"
+    right: "Vpravo"
+    notes: "Poznámky"
+
+
+results: 
+    h: "Přechod na další sekci"
+    values: "Nasčítané hodnoty"
+    name: "Název"
+    left: "Vlevo"
+    right: "Vpravo"
+    illegal: "Nelegální stání"
+    empty: "Volná místa"
+    not: "Nezaznamenaná místa"
+    together: "Dohromady"
+    button_close: "Zavřít"
+    button_next: "Pokračovat další sekcí"
+    button_map: "Uložit a pokračovat do mapy"
+    

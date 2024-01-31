@@ -1,0 +1,52 @@
+{var $num = $count->count / 4 / $limit}
+{dump $arr_par}
+{dump $presenter}
+{if isset($id)}
+    {var $arr_par[] = $id}
+{/if}
+{var $cnt = count($arr_par)}
+<nav class="ms-auto" aria-label="{_ preview.pagination}">
+    <ul class="pagination justify-content-center m-0">
+        <li class="page-item {if is_null($page) || $page == 1}disabled{/if}">
+            {var $arr_par[$cnt] = 1}
+            <a class="page-link" n:href="$presenter (expand)$arr_par"><i class="fas fa-angle-double-left"></i></a>
+        </li>
+        <li class="page-item {if is_null($page) || $page == 1}disabled{/if}">
+            {var $arr_par[$cnt] = $page - 1}
+            <a class="page-link" n:href="$presenter (expand)$arr_par"><i class="fas fa-angle-left"></i></a>
+        </li>
+        {if $count->count/$limit >= 5}
+            {if 0 < $page - 2}
+                {var $arr_par[$cnt] = $page - 2}
+                <li class="page-item d-none d-sm-table"><a class="page-link" n:href="$presenter (expand)$arr_par">{$page - 2}</a></li>
+				{/if}
+				{if 0 < $page - 1}
+					{var $arr_par[$cnt] = $page - 1}
+                <li class="page-item d-none d-sm-table"><a class="page-link" n:href="$presenter (expand)$arr_par">{$page - 1}</a></li>
+				{/if}
+				{var $arr_par[$cnt] = ceil($num * 2)}
+            <li class="page-item d-none d-sm-table active"><a class="page-link" n:href="$presenter (expand)$arr_par">{$page}</a></li>
+				{if ceil($count->count/$limit) >= $page + 1}
+					{var $arr_par[$cnt] = $page + 1}
+                <li class="page-item d-none d-sm-table"><a class="page-link" n:href="$presenter (expand)$arr_par">{$page + 1}</a></li>
+				{/if}
+				{if ceil($count->count/$limit) >= $page + 2}
+					{var $arr_par[$cnt] = $page + 2}
+                <li class="page-item d-none d-sm-table"><a class="page-link" n:href="$presenter (expand)$arr_par">{$page + 2}</a></li>
+				{/if}
+			{else}
+				{for $i = 0; $i < $count->count/$limit; $i++}
+					{var $arr_par[$cnt] = $i + 1}
+				<li class="page-item d-none d-sm-table {if $page == $i+1}active{/if}"><a class="page-link" n:href="$presenter (expand)$arr_par">{$i+1}</a></li>
+				{/for}
+			{/if}
+        <li class="page-item {if $page == ceil($count->count/$limit) || ceil($count->count/$limit) == 0}disabled{/if}">
+            {var $arr_par[$cnt] = $page + 1}
+            <a class="page-link" n:href="$presenter (expand)$arr_par"><i class="fas fa-angle-right"></i></a>
+        </li>
+        <li class="page-item {if $page == ceil($count->count/$limit) || ceil($count->count/$limit) == 0}disabled{/if}">
+            {var $arr_par[$cnt] = ceil($count->count/$limit)}
+            <a class="page-link" n:href="$presenter (expand)$arr_par"><i class="fas fa-angle-double-right"></i></a>
+        </li>
+    </ul>
+</nav>

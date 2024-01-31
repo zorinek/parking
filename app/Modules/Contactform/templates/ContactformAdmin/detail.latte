@@ -1,0 +1,59 @@
+{layout '../../../@layout_protected.latte'}
+{block title}
+{_ contactform.detail.title}
+{/block}
+{block description}
+{_ contactform.detail.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ contactform.detail.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form n:name="setContactMessageDoneForm">
+                <div class="card">
+                    <div class="card-header">
+                        <h1>{_ contactform.detail.h}</h1>
+                    </div>
+                    <div class="card-body">
+                        <p>{_ contactform.detail.con_email}: {$message->con_email}</p>
+                        {if $parameters['fields']['name']}
+                            <p>{_ contactform.detail.con_name}: {$message->con_name}</p>
+                        {/if}
+                        {if $parameters['fields']['phone']}
+                            <p>{_ contactform.detail.con_phone}: {$message->con_phone}</p>
+                        {/if}
+                        {if $parameters['fields']['category']}
+                            <p>{_ contactform.detail.con_category}: {_ 'contactform.categories.' . $message->con_category}</p>
+                        {/if}
+                        <p>{_ contactform.detail.con_message}: {$message->con_message}</p>
+
+
+                    </div>
+                    <div class="card-footer clearfix">
+                        <div class="float-start">
+                            {if isset($notification_file) && $notification_file}
+                                <a n:href=":Contactform:ContactformAdmin:getNotificationEmail $message->con_id" target="_blank" class="btn btn-success btn-sm mr-2 ">{_ contactform.detail.button_display_notification_email}</a>
+                            {/if}
+                            {if isset($sender_file) && $sender_file}
+                                <a n:href=":Contactform:ContactformAdmin:getSenderEmail $message->con_id" target="_blank" class="btn btn-success btn-sm">{_ contactform.detail.button_display_sended_email}</a>
+                            {/if}
+                        </div>
+                        <div class="float-end">
+                            {if is_null($message->use_id)}
+                                <button n:name="set_done" class="btn btn-success float-end">{_ contactform.detail.button_set_done}</button>
+                            {else}
+                                <span class="align-middle">{_ contactform.detail.set_done_message_1}: {$message->ref('users', 'use_id')->use_name} {_ contactform.detail.set_done_message_2} {$message->con_datetimedone|date:'d.m.Y'} {_ contactform.detail.set_done_message_3} {$message->con_datetimedone|date:'H:i:s'}</span>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}

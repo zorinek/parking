@@ -1,0 +1,93 @@
+{layout '../../../@layout_protected.latte'}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+<a n:href=":Projects:Projects:preview locale => $locale, pro_id => ''">{_ projects.detail.preview}</a>
+<span>  >  </span>
+{_ projects.new.breadcrumb}
+{/block}
+{block title}
+{_ projects.new.title}
+{/block}
+{block description}
+{_ projects.new.description}
+{/block}
+{block content}
+
+{var $param_proj = $p_projects}
+{var $param_camp = $p_campaigns}
+
+<div class="container">
+    <div class='row'>
+        <div class='col-sm-12 col-md-12 '>
+            <form n:name="newProjectForm">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3>{_ projects.new.h}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div n:foreach="$form->errors as $error" n:class="alert, 'alert-danger'">{$error|noescape}</div>
+
+                        {var $name = 'pro_name'}
+                        {if $param_proj['displayed'][$name]}
+                            <div class="form-group">
+                                <label n:name="{$name}" class="form-label mt-2">{_ "projects.new.$name"}{if $param_proj['required'][$name]} *{/if}</label>
+                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $param_proj['required'][$name]}required{/if}>
+                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                            </div>
+                        {/if}
+                        {var $name = 'pro_note'}
+                        {if $param_proj['displayed'][$name]}
+                            <div class="form-group">
+                                <label n:name="{$name}" class="form-label mt-2">{_ "projects.new.$name"}{if $param_proj['required'][$name]} *{/if}</label>
+                                <textarea class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $param_proj['required'][$name]}required{/if}></textarea>
+                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                            </div>
+                        {/if}
+
+                        {var $name = 'cam_name'}
+                        {if $param_camp['displayed'][$name]}
+                            <div class="form-group">
+                                <label n:name="{$name}" class="form-label mt-2">{_ "projects.new.campaigns.$name"}{if $param_camp['required'][$name]} *{/if}</label>
+								<input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $param_camp['required'][$name]}required{/if}>
+                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                            </div>
+                            <div id="campaigns_next">
+
+                            </div>
+                            <div class="clearfix">
+                                <a href="javascript:void(0);" class="float-end" onclick="add_campaign();">Přidat další kampaň</a>
+                            </div>
+                        {/if}
+
+                        <hr>
+                        <p class="small">{_ projects.new.note}</p>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-success float-end" n:name="insert_new_project">{_ projects.new.button_insert}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{/block}
+{block scripts}
+<script>
+	function add_campaign()
+	{
+		var url = {plink :Projects:Projects:getCampaign};
+		console.log(url);
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				// Typical action to be performed when the document is ready:
+				document.getElementById("campaigns_next").insertAdjacentHTML('beforeend', JSON.parse(xhttp.responseText));
+			}
+		};
+		xhttp.open("GET", url, true);
+		xhttp.send();
+	}
+</script>
+{/block}

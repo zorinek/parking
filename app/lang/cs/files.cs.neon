@@ -1,0 +1,17 @@
+admin:
+    title: "Správa souborů"
+    description: "Správa souborů"
+    breadcrumb: "Správa souborů"
+    h: "Správa souborů"
+    fil_id: "Id"
+    fil_name: "Původní název"
+    fil_storagename: "Název na disku"
+    fil_path: "Cesta k souboru"
+    fil_ext: "Koncovka"
+    typ_id: "Typ souboru"
+    remove_question: "Opravdu chcete odstranit vybraný soubor?"
+
+typ_id:
+    1: "Obrázek uživatele"
+    2: "Dokument"
+    3: "Obrázek"

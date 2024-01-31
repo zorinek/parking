@@ -1,0 +1,210 @@
+{layout '../../../@layout_protected.latte'}
+{block title}
+{_ users.profile.title}
+{/block}
+{block description}
+{_ users.profile.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ users.profile.breadcrumb}
+{/block}
+{block content}
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/file-upload-with-preview@4.0.2/dist/file-upload-with-preview.min.css">
+<style>
+    .preview-container
+    {
+        overflow: auto;
+    }
+</style>
+<div class="container">
+    <div class='row'>
+        <div class='col-12'>
+            <div class="card">
+                <div class="card-header">
+                    <h3>{_ users.profile.h}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            {include "../Users/editUser.latte"}
+
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h2>{_ users.profile.h_management}</h2>
+                                </div>
+                                <div class="card-body">
+                                    <form n:name="managementProfileForm">
+
+                                        {if $two_factor_auth_enabled}
+                                            {if $user_data->use_tfa_enabled == $two_factor_auth_status['enable']}
+                                                <p>
+                                                    <button type="submit" class="btn btn-danger" n:name="deactivate_tfa">{_ users.profile.button_deactivate_2fa}</button>
+                                                </p>
+                                            {else}
+                                                <p>
+                                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#activateotpModal" name="activate_tfa">{_ users.profile.button_activate_2fa}</button>
+												<div class="modal fade" id="activateotpModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+                                                            <div class="modal-header">
+																<h5 class="modal-title" id="exampleModalLabel">{_ users.profile.h_tfa}</h5>
+																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body mx-auto">
+                                                                <img class="img" src="{$qr}">
+                                                                <p>{_ users.profile.code}: {$code}</p>
+                                                            </div>
+                                                            <div class="modal-footer d-block">
+																<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{_ users.profile.button_close}</button>
+																<button type="submit" class="btn btn-success float-end" n:name="activate_tfa">{_ users.profile.button_deactivate_2fa}</button>
+                                                            </div>
+														</div>
+													</div>
+												</div>
+                                                </p>
+                                            {/if}  
+                                        {/if}
+
+                                        {if $use_one_time_password}
+                                            {if $otp_active}
+                                                <p>
+                                                    {_ users.profile.message_otp_1} {$count_unused_otp_passwords->count} {_ users.profile.message_otp_2} {$count_unused_otp_passwords->uso_valid_to|date:'d.m.Y H:i:s'}
+                                                </p>
+                                                <p>
+                                                    <button type="submit" class="btn btn-danger" n:name="remove_otp_passwords">{_ users.profile.button_remove_otp}</button>
+                                                </p>
+                                            {else}
+                                                <p>{_ users.profile.message_no_otp}</p>
+                                                <p>
+                                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#activate2faModal" name="activate_tfa">{_ users.profile.button_generate_otp}</button>
+												<div class="modal fade" id="activate2faModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+                                                            <div class="modal-header">
+																<h5 class="modal-title" id="exampleModalLabel">{_ users.profile.h_otp}</h5>
+																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body mx-auto">
+                                                                <p>{_ otp.create.warning}</p>
+                                                                {foreach $otp_pass as $line}
+                                                                    <p>{implode('-', $line)}</p>
+                                                                {/foreach}
+                                                            </div>
+                                                            <div class="modal-footer d-block">
+																<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{_ users.profile.button_close}</button>
+																<button type="submit" class="btn btn-success float-end" n:name="generate_otp_passwords">{_ users.profile.button_use_otp}</button>
+                                                            </div>
+														</div>
+													</div>
+												</div>
+                                                </p>
+                                            {/if}
+                                        {/if} 
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <form n:name="accountImageForm">
+								<div class="card mt-3 mt-md-0">
+									<div class="card-header">
+										<h4>{_ users.profile.title_photo}</h4>
+									</div>
+									<div class="card-body">
+										<div class='custom-file-container' data-upload-id='myUniqueUploadId'>
+											<label class="d-block">{_ users.profile.profile_photo}
+												<span class="float-end">
+													<a href=javascript:void(0) class='custom-file-container__image-clear' title="{_ users.profile.delete_photo}">&times;</a>
+												</span>
+											</label> 
+											<label class='custom-file-container__custom-file'>
+												<input type='file' class='custom-file-container__custom-file__custom-file-input {if $form['image']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}' id='customFile' accept='image/jpeg' aria-label="Choose file" n:name="image"> 
+												<span class='custom-file-container__custom-file__custom-file-control'>
+												</span>
+												<div class="invalid-feedback">{$form['image']->error}</div>
+											</label>
+											<div class='custom-file-container__image-preview preview-container mb-0' style="background-size: auto 100%;">
+											</div>
+										</div>
+									</div>
+									<div class="card-footer">
+										<button type="submit" class="btn btn-success float-end" n:name="save_image">{_ users.profile.save_photo}</button>
+									</div>
+								</div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <form n:name="resetPasswordAdminForm">
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h5>{_ users.profile.title_reset_password}</h5>
+                            </div>
+                            <div class="card-body">
+                                <label class="form-label mt-2" n:name="current_password">{_ users.profile.current_password}</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control {if !$password_display}rounded-end{/if} {if $form['current_password']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" value="{$form['current_password']->value}" id="password" n:name="current_password">
+                                    {if $password_display}<button class="btn btn-outline-secondary show-password rounded-end fa fa-eye-slash" type="button"></button>{/if}
+                                    <div class="invalid-feedback">{$form['current_password']->error}</div>
+                                </div>
+                                <label class="form-label mt-2" n:name="new_password">{_ users.profile.new_password}</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control {if !$password_display}rounded-end{/if} {if $form['new_password']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" value="{$form['new_password']->value}" id="password" n:name="new_password">
+                                    {if $password_display}<button class="btn btn-outline-secondary show-password rounded-end fa fa-eye-slash" type="button"></button>{/if}
+                                    <div class="invalid-feedback">{$form['new_password']->error}</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" n:name="change_password" class="btn btn-success float-end">{_ users.profile.button_change_password}</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form n:name="resetPasswordAdminForm">
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h5>{_ users.profile.title_delete_account}</h5>
+                            </div>
+                            <div class="card-body">
+                                {_ users.profile.message_delete_account}
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" n:name="change_password" class="btn btn-danger float-end">{_ users.profile.button_delete_account}</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{/block}
+{block scripts}
+<script src="https://unpkg.com/file-upload-with-preview@4.0.2/dist/file-upload-with-preview.min.js"></script>
+
+<script>
+
+	var upload = new FileUploadWithPreview('myUniqueUploadId', {
+		showDeleteButtonOnImages: true,
+		text: {
+			chooseFile: 'Vyberte soubor',
+			browse: 'Procházet',
+			selectedCount: 'souborů',
+		},
+		images: {
+			baseImage: {plink :Settings:Account:image},
+		},
+		presetFiles: [
+//                    '../public/logo-promosis.png',
+//                    'https://images.unsplash.com/photo-1557090495-fc9312e77b28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80',
+		],
+	})
+</script>
+{/block}
+

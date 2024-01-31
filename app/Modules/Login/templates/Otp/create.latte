@@ -1,0 +1,44 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ otp.create.title}
+{/block}
+{block description}
+{_ otp.create.title}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ otp.create.breadcrumb}
+{/block}
+{block content}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-2">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="float-start">{_ otp.create.h}</h3>
+                    <a n:href=":Login:Otp:pdf" target="_blank" class="btn btn-secondary float-end">{_ otp.create.button_print}</a>
+                </div>
+                <div class="card-body text-center">
+                    <p>{_ otp.create.warning}</p>
+                    {foreach $otp_pass as $line}
+                        <p>{implode('-', $line)}</p>
+                    {/foreach}
+
+
+                </div>
+                <div class="card-footer">
+                    <form n:name="setOtpForm" class=" d-grid gap-2 d-md-block">
+                        <button type="submit" n:name="disable_otp" class="btn btn-secondary">{_ otp.create.button_no_use}</button>
+                        <button type="submit" n:name="enable_otp" class="btn btn-success float-end">{_ otp.create.button_save}</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{/block}

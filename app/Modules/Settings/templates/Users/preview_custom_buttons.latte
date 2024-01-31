@@ -1,0 +1,8 @@
+<td><a n:href=":Settings:Users:detail $line->{$search_values[0][0]}" class="btn btn-primary btn-sm">{_ users.admin.button_detail}</a>
+    {dump $parameters}
+    {if $line->use_active == $parameters['user_activation_status']['activated']}
+        <a class="btn btn-danger btn-sm ml-2" n:href=":Settings:Users:deactivate_user $line->{$search_values[0][0]}">Deaktivovat</a>
+    {else}
+        <a class="btn btn-success btn-sm ml-2" n:href=":Settings:Users:activate_user $line->{$search_values[0][0]}">Aktivovat</a>
+    {/if}
+</td>

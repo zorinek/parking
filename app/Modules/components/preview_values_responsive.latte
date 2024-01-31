@@ -1,0 +1,35 @@
+{foreach $search_values as $value}
+    {breakIf $value[0] == "and_or"}
+    <tr>
+        <th>{_ $lang_file_name . $value[0]}</th>
+			{if isset($value[3]) && $value[3] == "link"}
+            <td>
+                <a href="{$line->{$value[0]}}">{$line->{$value[0]}}</a>
+            </td>
+        {elseif isset($value[3]) && $value[3]}
+            {if isset($value[7]) && $value[7] === "n"}
+                <td>
+				{foreach $line->related($value[3], $value[8]) as $ln}{if !$iterator->first}, {/if}{$ln->usr_role}{/foreach}
+			</td>
+		{elseif $line->{$value[0]} != null}
+			{if is_array($value[4])}
+				{if empty($line->ref($value[3], $value[0])->{$value[4][0]})}
+					<td>{$line->ref($value[3], $value[0])->{$value[4][1]}}</td>
+				{else}
+					<td>{$line->ref($value[3], $value[0])->{$value[4][0]}}</td>
+				{/if}
+			{else}
+				<td>{$line->ref($value[3], $value[0])->{$value[4]}}</td>
+			{/if}
+		{else}
+			<td>{$value[5]}</td>
+		{/if}
+	{else}
+		{if gettype($line->{$value[0]}) == 'object' && get_class($line->{$value[0]}) == 'DateInterval'}
+			<td>{$line->{$value[0]}->format('%H:%I:%S')}</td>
+		{else}
+			<td>{$line->{$value[0]}}</td>
+		{/if}
+	{/if}
+</tr>
+{/foreach}

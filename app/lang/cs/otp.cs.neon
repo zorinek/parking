@@ -1,0 +1,32 @@
+create:
+    title: "Nastavení jednorázových hesel"
+    description: "Nastavení jednorázových hesel"
+    breadcrumb: "Nastavení jednorázových hesel"
+    h: "Nastavení jednorázových hesel"
+    button_print: "Tisk jednorázových hesel"
+    warning: "Jednorázové kódy pro přihlášení pečlivě uschovejte na bezpečném místě!"
+    button_no_use: "Nechci použít jednorázová hesla"
+    button_save: "Uložit jednorázová hesla"
+
+pdf:
+    title1: "Jednorázové kódy pro přihlášení na serveru"
+    title2: "pečlivě uschovejte na bezpečném místě!"
+    file_title: "Vygenerovaná jednorázová hesla pro portál"
+
+otp:
+    title: "Přihlášení jednorázovým heslem"
+    description: "Přihlášení jednorázovým heslem"
+    breadcrumb: "Přihlášení jednorázovým heslem"
+    h: "Přihlášení jednorázovým heslem"
+    error_1: "Zadaný e-mail ještě nebyl ověřen. Počkejte prosím než dorazí. Nebo si jej nechte zaslat znovu"
+    here: "zde"
+    use_email: "E-mail"
+    uso_passhash: "Jednorázové heslo"
+    button_reset_password: "Zapomenuté heslo"
+    otp_sign_in: "Přihlásit se"
+    error_use_email: "Prosím vložte váš e-mail!"
+    error_uso_passhash: "Prosím vložte jednorázové heslo!"
+    error_email_not_found: "E-mail nebyl nalezen!"
+    error_credentials_incorrect: "Zadané přihlašovací údaje nejsou správné!"
+    error_account_not_active: "Váš účet není aktivní!"
+    

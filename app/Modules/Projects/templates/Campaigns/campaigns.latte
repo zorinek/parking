@@ -1,0 +1,32 @@
+{if !empty($finished_segments)}
+	<div class="card mb-3">
+		<div class="card-header">
+			<h4 class="h5">{_ sections.campaigns.h}</h4>
+		</div>
+		<div class="card-body m-0 p-0">
+			{foreach $finished_segments as $line}
+				<table class="table table-striped m-0 p-0">
+					<thead>
+						<tr>
+							<th colspan="2">{$line->cam_name}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>{_ sections.campaigns.together}</th>
+							<td>{($line->cas_parkingdetected_left + $line->cas_parkingnotdetected_left - $line->cas_parkingillegal_left + $line->cas_parkingfree_left) + ($line->cas_parkingdetected_right + $line->cas_parkingnotdetected_right - $line->cas_parkingillegal_right + $line->cas_parkingfree_right)}</td>
+						</tr>
+						<tr>
+							<th>{_ sections.campaigns.left}</th>
+							<td>{$line->cas_parkingdetected_left + $line->cas_parkingnotdetected_left - $line->cas_parkingillegal_left + $line->cas_parkingfree_left}</td>
+						</tr>
+						<tr>
+							<th>{_ sections.campaigns.right}</th>
+							<td>{$line->cas_parkingdetected_right + $line->cas_parkingnotdetected_right - $line->cas_parkingillegal_right + $line->cas_parkingfree_right}</td>
+						</tr>
+					</tbody>
+				</table>
+			{/foreach}
+		</div>
+	</div>
+{/if}

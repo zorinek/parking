@@ -1,0 +1,39 @@
+{if !is_null($line['dis_authorized_by']) || $p_discussion['comment_authorization'] == $p_discussion['comment_authorization_status']['none']}
+    <div class="dr bg-light p-1 my-2 border rounded {if $offset > 0}offset-{$offset}{/if}" id="{$line['dis_id']}">
+        <div class="row">
+            <div class="col-12 text-sm d-flex align-items-center">
+                <a href="javascript:void(0);" class="text-secondary me-auto" {if $p_discussion['use_reply']}onclick="setReply('{$line['dis_id']}');"{/if}>#{$line['dis_id']}</a>
+                <span class="me-2">{$line['dis_datetimeinsert']->format('d.m.Y H:i:s')}</span>
+                {if $p_discussion['use_reply']}
+                    <span><button class="btn btn-outline-secondary btn-sm" onclick="setReply('{$line['dis_id']}');">{_ discussion.comment.button_reply}</button></span>
+					{/if}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-12 d-flex align-items-center">
+                {if $p_discussion['use_image']}
+			{if !empty($line['use_id'])}{var $use_id = $line['use_id']}{else}{var $use_id = 0}{/if}
+			<a href="" class="me-2"><img src="{plink :Discussion:Discussion:image $use_id}" class="rounded-circle" width="40" height="40"></a>
+			{/if}
+		<div class="h5"><a href="">{$line['dis_email']}</a></div>
+	</div>
+
+	<div class="col-12">
+		{if $p_discussion['use_reply'] && $line['dis_reply'] != 0}
+			<span>{_ discussion.comment.reply_to} <a href="#{$line['dis_reply']}" class="text-secondary">#{$line['dis_reply']}</a></span>: 
+		{/if}
+		{$line['dis_message']}
+	</div>
+</div>
+</div>
+{if isset($line['children'])}
+	{foreach $line['children'] as $l}
+		{if $offset >= $max_offset}
+			{var $of = $max_offset}
+		{else}
+			{var $of = $offset + 1}
+		{/if}
+		{include 'comment.latte', 'line' => $l, 'offset' => $of, 'max_offset' => $max_offset}
+	{/foreach}
+{/if}
+{/if}

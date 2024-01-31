@@ -1,0 +1,4 @@
+<p>{_ otp.pdf.title1} {$server_name} {_ otp.pdf.title2}</p>
+{foreach $otp_pass as $line}
+    <p>{implode('-', $line)}</p>
+{/foreach}

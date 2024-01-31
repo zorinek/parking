@@ -1,0 +1,37 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ registration.set_tfa.title}
+{/block}
+{block description}
+{_ registration.set_tfa.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ registration.set_tfa.breadcrumb}
+{/block}
+{block content}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{_ registration.set_tfa.h}</h3>
+                </div>
+                <div class="card-body mx-auto">
+                    <img class="img" src="{$qr}">
+                    <p>Kód: {$code}</p>
+                </div>
+                <div class="card-footer">
+                    <form n:name="tfaForm">
+                        <button n:name="skip_tfa" class="btn btn-secondary">{_ registration.set_tfa.skip_button}</button>
+                        <button n:name="enable_tfa" class="btn btn-success float-end">{_ registration.set_tfa.set_button}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}

@@ -1,0 +1,73 @@
+{layout '../../../@layout_protected.latte'}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ queries.update.breadcrumb}
+{/block}
+{block title}
+{_ queries.update.title}
+{/block}
+{block description}
+{_ queries.update.description}
+{/block}
+{block content}
+
+
+<div class="container">
+    <div class='row'>
+        <div class='col-sm-12 col-md-12 '>
+            <form n:name="updateQueryForm">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3>{_ queries.update.h}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div n:foreach="$form->errors as $error" n:class="alert, 'alert-danger'">{$error|noescape}</div>
+                        {var $name = 'que_name'}
+                        {if $p_queries['displayed'][$name]}
+                            <div class="form-group">
+                                <label n:name="{$name}" class="form-label mt-2">{_ queries.update.$name}{if $p_queries['required'][$name]} *{/if}</label>
+                                <input type="text" class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $p_queries['required'][$name]}required{/if}>
+                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                            </div>
+                        {/if}
+                        {var $name = 'que_query'}
+                        {if $p_queries['displayed'][$name]}
+                            <div class="form-group">
+                                <label n:name="{$name}" class="form-label mt-2">{_ queries.update.$name}{if $p_queries['required'][$name]} *{/if}</label>
+                                <textarea class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $p_queries['required'][$name]}required{/if}></textarea>
+                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                            </div>
+                        {/if}
+                        {var $name = 'que_note'}
+                        {if $p_queries['displayed'][$name]}
+                            <div class="form-group">
+                                <label n:name="{$name}" class="form-label mt-2">{_ queries.update.$name}{if $p_queries['required'][$name]} *{/if}</label>
+                                <textarea class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $p_queries['required'][$name]}required{/if}></textarea>
+                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                            </div>
+                        {/if}
+
+                        {var $name = 'que_status'}
+                        {if $p_queries['displayed'][$name]}
+                            <label n:name="{$name}" class="form-label mt-2">{_ queries.update.$name}{if $p_queries['required'][$name]} *{/if}</label>
+                            <select class="form-control" n:name="{$name}">
+
+                            </select>
+                        {/if}
+
+
+                        <hr>
+                        <p class="small">{_ queries.update.note}</p>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-success float-end" n:name="insert_query">{_ queries.update.button_compute}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{/block}
+

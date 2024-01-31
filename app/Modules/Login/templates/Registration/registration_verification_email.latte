@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{_ registration.verification_email.title}</title>
+		<style>
+
+		</style>
+	</head>
+	<body>
+		<p>{_ registration.verification_email.hello},</p>
+
+        <p>{_ registration.verification_email.done} <a n:href="Login:Registration:verification $token">{link Login:Registration:verification $token}</a></p>
+        <p>{_ registration.verification_email.time_to} {$token_expiration|date:'d.m.Y H:i:s'}</p>
+	</body>
+</html>

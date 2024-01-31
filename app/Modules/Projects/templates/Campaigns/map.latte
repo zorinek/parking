@@ -1,0 +1,97 @@
+{layout '../../../@layout_protected.latte'}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+<a n:href=":Projects:Projects:preview locale => $locale, pro_id => ''">{_ campaigns.map.project_preview}</a>
+<span>  >  </span>
+<a n:href=":Projects:Projects:detail $pro_id">{_ campaigns.map.project_detail}</a>
+<span>  >  </span>
+{_ campaigns.map.map}
+{/block}
+{block title}
+{_ campaigns.map.title}
+{/block}
+{block description}
+{_ campaigns.map.description}
+{/block}
+{block head}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+
+<style>
+    #map {
+        min-height:750px;
+    }
+
+</style>
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex">
+                    <h4 class="my-1">{_ campaigns.map.h}</h4>
+                    <div class="ms-auto my-1">
+                        <div class="float-end ml-3"><div class="float-start" style="background-color:blue; width:15px;">&nbsp;</div>&nbsp;{_ campaigns.map.notfinished_sections}</div>
+                        <div class="float-end mx-3"><div class="float-start" style="background-color:red; width:15px;">&nbsp;</div>&nbsp;{_ campaigns.map.finished_sections}</div>    
+                        <div class="float-end mx-3"><div class="float-start" style="background-color:green; width:15px;">&nbsp;</div>&nbsp;{_ campaigns.map.selected_sections}</div>    
+                        <div class="float-end mx-3"><div class="float-start" style="background-color:orange; width:15px;">&nbsp;</div>&nbsp;{_ campaigns.map.reserved_sections}</div>    
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+
+{block scripts}
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+<script>
+
+	var map = L.map('map').setView([49.8, 15.5], 8);
+
+	var tiles = L.tileLayer('https://{ s}.tile.openstreetmap.org/{ z}/{ x}/{ y}.png', {
+		maxZoom: 19,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+
+	var segments = JSON.parse({$segments});
+	console.log(segments);
+	var polylines = new L.featureGroup();
+	for (var x in segments)
+	{
+		var color = "";
+		if (segments[x].done == "0")
+		{
+			color = "blue";
+		} else if (segments[x].done == "1")
+		{
+			color = "red";
+		} else if (segments[x].done == "2")
+		{
+			color = "orange";
+		}
+		var poly = L.polyline(segments[x].poly, { color: color, original_color: color, link: segments[x].link});
+		poly.on('mouseover', function () {
+			this.setStyle({
+				color: 'green'
+			});
+		});
+		poly.on('mouseout', function () {
+			this.setStyle({
+				color: this.options.original_color
+			});
+		});
+		poly.on('click', function () {
+			window.location.href = this.options.link;
+		});
+		poly.addTo(polylines);
+	}
+	polylines.addTo(map);
+	map.fitBounds(polylines.getBounds());
+
+</script>
+{/block}

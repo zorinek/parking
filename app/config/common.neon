@@ -1,0 +1,368 @@
+#
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+#
+parameters:
+	default:
+		server_name: "Nehodové lokality"
+		server_url: "https://nehodove-lokality.cdv.cz/"
+		results_number: 10
+		cookiebar_enabled: true
+	logreg:
+		password_min_length: 8
+		two_factor_auth_enabled: false
+		send_email_verification: false
+		registration_token_length: 25
+		registration_token_expiration: 3600
+		password_token_length: 25
+		password_token_expiration: 3600
+		password_second: false
+		password_display: true
+		first_login_modal_enabled: false
+		first_login_status:
+			logged: 1
+			notlogged: 2
+		registration:
+			name: false
+			phone: false
+			terms: false
+		email_verifed: 1
+		email_verification_status:
+			expired: 1
+			not_found: 2
+		two_factor_auth_status:
+			enable: 1
+			disable: 0
+		roles_types:
+			user: "user"
+			admin: "admin"
+		default_role: "user"
+		multiple_roles: true
+		password_verification_status:
+			expired: 1
+			not_found: 2
+		registration_email_sender: 'Test <test@cdv.cz>'
+		reset_password_email_sender: 'Test <test@cdv.cz>'
+		google_authenticator_name: 'Testovací aplikace CDV'
+		password_types:
+			0: "only min length"
+			1: "min length + chars + numbers"
+			2: "min length + chars + numbers + capital letters"
+			3: "min length + chars + numbers + capital letters + special chars"
+		default_password_type: 0
+		disable_password_change: false
+		reset_password_length: 25
+		user_activation_status:
+			activated: 1
+			deactivated: 2
+		use_active:
+			1: "users.use_active.1"
+			2: "users.use_active.2"
+		default_user_activation: 2
+		use_captcha_registration: false
+		use_one_time_password: false
+		one_time_password_count: 10
+		one_time_password_count_sequences: 1
+		one_time_password_count_sequence_length: 5
+		one_time_password_expiration_days: 365
+		one_time_password_status:
+			activated: 1
+			deactivated: 2
+		user_image_file_dir: "../uploads/user_images/"
+	contactform:
+		fields:
+			name: true
+			phone: true
+			category: true
+			sender: true
+		captcha_enabled: true
+		con_category:
+			1: "contactform.categories.1"
+			2: "contactform.categories.2"
+			3: "contactform.categories.3"
+		con_sender:
+			1: "contactform.sender.1"
+			2: "contactform.sender.2"
+		categories_emails:
+			1: "Tomáš Kovařík <tomas.kovarik@cdv.cz>"
+			2: "Tomáš Kovařík <tomas.kovarik@cdv.cz>"
+			3: "Tomáš Kovařík <tomas.kovarik@cdv.cz>"
+		default_email: "Tomáš Kovařík <tomas.kovarik@cdv.cz>"
+		saving:
+			none: 1
+			db: 2
+			file: 3
+			both: 4
+		default_saving: 4
+		send_notification_email: true
+		notification_dir: "../emails/notification/"
+		sender_dir: "../emails/sender/"
+	discussion:
+		use_image: true
+		use_reply: true
+		use_captcha: true
+		max_offset: 5
+		email_notification: false
+		auth_users_only: true
+		email_sender: 'Test <test@cdv.cz>'
+		comment_authorization: 2
+		comment_authorization_status:
+			none: 1
+			not_authorized: 2
+			all: 3
+		default_user_authorized: "disabled"
+		user_authorized_status:
+			enabled: 1
+			disabled: 2
+	upload:
+		upload_dir: "../uploads/"
+		file_types:
+			user_image: 1
+			doc: 2
+			image: 3
+		typ_id:
+			1: "files.typ_id.1"
+			2: "files.typ_id.2"
+			3: "files.typ_id.3"
+	showbox:
+		disallowed_pages: ["Settings:Users:preview", "Sections:Sections:process"]
+	queries:
+		displayed:
+			que_name: true
+			que_query: true
+			que_note: true
+			que_status: true
+		required:
+			que_name: true
+			que_query: true
+			que_note: true
+			que_status: true
+		que_status:
+			1: "queries.que_status.1"
+			2: "queries.que_status.2"
+			3: "queries.que_status.3"
+			4: "queries.que_status.4"
+	projects:
+		displayed:
+			pro_name: true
+			pro_note: true
+		required:
+			pro_name: true
+			pro_note: false
+	campaigns:
+		displayed:
+			cam_name: true
+		required:
+			cam_name: true
+		cas_done:
+			0: "campaigns.cas_done.0"
+			1: "campaigns.cas_done.1"
+			2: "campaigns.cas_done.2"
+	videos:
+		displayed:
+			vid_files: true
+		required:
+			vid_files: true
+	configuration:
+		displayed:
+			play_pause: true
+			speed_up: true
+			speed_down: true
+			reset_speed: true
+			left_minus_illegal: true
+			left_plus_illegal: true
+			left_minus_empty: true
+			left_plus_empty: true
+			left_minus_not: true
+			left_plus_not: true
+			left_delete: true
+			right_minus_illegal: true
+			right_plus_illegal: true
+			right_minus_empty: true
+			right_plus_empty: true
+			right_minus_not: true
+			right_plus_not: true
+			right_delete: true
+			minus_illegal: true
+			plus_illegal: true
+			minus_empty: true
+			plus_empty: true
+			minus_not: true
+			plus_not: true
+			delete: true
+			layout: true
+			measurement: true
+		required:
+			play_pause: false
+			speed_up: false
+			speed_down: false
+			reset_speed: false
+			left_minus_illegal: false
+			left_plus_illegal: false
+			left_minus_empty: false
+			left_plus_empty: false
+			left_minus_not: false
+			left_plus_not: false
+			left_delete: false
+			right_minus_illegal: false
+			right_plus_illegal: false
+			right_minus_empty: false
+			right_plus_empty: false
+			right_minus_not: false
+			right_plus_not: false
+			right_delete: false
+			minus_illegal: false
+			plus_illegal: false
+			minus_empty: false
+			plus_empty: false
+			minus_not: false
+			plus_not: false
+			delete: false
+			layout: false
+			measurement: false
+		default_value:
+			play_pause: "Space"
+			speed_up: "+"
+			speed_down: "-"
+			reset_speed: "Escape"
+			left_minus_illegal: "q"
+			left_plus_illegal: "w"
+			left_minus_empty: "a"
+			left_plus_empty: "s"
+			left_minus_not: "y"
+			left_plus_not: "x"
+			left_delete: "Backspace"
+			right_minus_illegal: "t"
+			right_plus_illegal: "z"
+			right_minus_empty: "g"
+			right_plus_empty: "h"
+			right_minus_not: "b"
+			right_plus_not: "n"
+			right_delete: "Delete"
+			minus_illegal: "q"
+			plus_illegal: "w"
+			minus_empty: "a"
+			plus_empty: "s"
+			minus_not: "y"
+			plus_not: "x"
+			delete: "Delete"
+			layout: "1"
+			measurement: "1"
+		layout:
+			1: "configuration.screen_layout.1"
+			2: "configuration.screen_layout.2"
+		measurement:
+			1: "configuration.screen_measurement.1"
+			2: "configuration.screen_measurement.2"
+
+application:
+	catchExceptions: false
+	errorPresenter: Error:Error
+	mapping:
+		Error: ['App\Presenters', '*', '*Presenter']
+		*: ['App\Modules',  '*', '*Presenter']
+
+
+session:
+	expiration: 14 days
+
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=test'
+	user: 
+	password:
+	options:
+		lazy: yes
+
+
+
+services:
+	- App\Model\Users(%logreg%)
+	- App\Model\PreviewFactory
+	- App\Model\ExportsFactory
+	- App\Model\MailSender
+	- App\Model\Captcha
+	- App\Model\Files
+	- App\Model\Contactform
+	- App\Model\Roles
+	- App\Model\Discussion(%discussion%)
+	- App\Model\Notes
+	- App\Model\Queries
+	- App\Model\Projects
+	- App\Model\UsersConfigurations
+	- App\Model\Campaigns
+	- App\Model\CampaignsSegments
+	- App\Model\Segments
+	- App\Model\Gps
+	- App\Model\Videos
+	- App\Forms\FormFactory
+	- App\Forms\SignInFormFactory
+	- App\Forms\RegistrationFormFactory(%logreg%, %discussion%)
+	- App\Forms\LoginFormFactory(%logreg%)
+	- App\Forms\LoginTfaFormFactory
+	- App\Forms\SetNewPasswordFormFactory(%logreg%)
+	- App\Forms\ResetPasswordFormFactory(%logreg%)
+	- App\Forms\TfaFormFactory(%logreg%)
+	- App\Forms\VerificationEmailAgainFormFactory(%logreg%)
+	- App\Forms\UpdateUserFormFactory(%logreg%)
+	- App\Forms\ManagementFormFactory(%logreg%, %discussion%)
+	- App\Forms\SetOtpFormFactory(%logreg%)
+	- App\Forms\OtpFormFactory
+	- App\Forms\AccountImageFormFactory(%upload%)
+	- App\Forms\ResetPasswordAdminFormFactory(%logreg%)
+	- App\Forms\ContactformFormFactory(%contactform%, %default%)
+	- App\Forms\SetContactMessageDoneFormFactory
+	- App\Forms\NewCommentFormFactory(%discussion%, %default%)
+	- App\Forms\FileUploadFormFactory(%upload%)
+	- App\Forms\ManagementProfileFormFactory(%logreg%)
+	- App\Forms\NewUserFormFactory(%logreg%, %discussion%, %default%)
+	- App\Forms\NewQueryFormFactory(%queries%)
+	- App\Forms\UpdateQueryFormFactory(%queries%)
+	- App\Forms\NewProjectFormFactory(%projects%, %campaigns%)
+	- App\Forms\UpdateProjectFormFactory(%projects%)
+	- App\Forms\ConfigurationFormFactory(%configuration%)
+	- App\Forms\LoadVideoFilesFormFactory(%videos%)
+	- App\Forms\FinishSectionFormFactory()
+	- App\Forms\InSolutionFormFactory()
+	- App\Forms\RemoveReservationFormFactory()
+	- App\Forms\RemoveReservationSegmentFormFactory()
+	- App\Modules\Login\RegistrationPresenter(%logreg%)
+	- App\Modules\Login\LoginPresenter(%logreg%)
+	- App\Modules\Settings\UsersPresenter(%logreg%, %discussion%)
+	- App\Modules\Login\OtpPresenter(%logreg%)
+	- App\Modules\Settings\AccountPresenter(%logreg%)
+	- App\Modules\Contactform\ContactformPresenter(%contactform%)
+	- App\Modules\Contactform\ContactformAdminPresenter(%contactform%)
+	- App\Modules\Admin\HomepagePresenter(%logreg%)
+	- App\Modules\Discussion\DiscussionPresenter(%discussion%)
+	- App\Modules\Discussion\DiscussionAdminPresenter(%discussion%)
+	- App\Modules\Files\FilesAdminPresenter(%upload%)
+	- App\Modules\Queries\QueriesPresenter(%queries%)
+	- App\Modules\Queries\QueriesFrontendPresenter(%queries%)
+	- App\Modules\Projects\ProjectsPresenter(%projects%, %campaigns%, %videos%)
+	- App\Modules\Projects\CampaignsPresenter(%projects%, %campaigns%, %configuration%)
+	- App\Modules\UsersConfigurations\UsersConfigurationsPresenter(%configuration%)
+	- 
+		factory: App\Model\Otp(%logreg%)
+		autowired: self
+	router: App\Router\RouterFactory::createRouter
+
+decorator:
+	App\Presenters\BasePresenter:
+		setup:
+			- setPDefault(%default%)
+	App\Presenters\BaseProtectedPresenter:
+		setup:
+			- setPDefault(%default%)
+			- setPShowbox(%showbox%)
+
+extensions:
+    translation: Contributte\Translation\DI\TranslationExtension
+
+translation:
+    locales:
+        whitelist: [en, cs]
+        default: cs
+        fallback: [en]
+    dirs:
+        - %appDir%/lang/cs
+        - %appDir%/lang/en

@@ -1,0 +1,26 @@
+<div id="segment_reservation" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+		{form inSolutionForm}
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{_ sections.reservation.h}</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					{_ sections.reservation.question}?
+					{if !empty($form->getOwnErrors()) && $form->getOwnErrors()[0] != ''}
+						<div class="alert alert-danger mt-3" role="alert">
+							<b>{$form->getOwnErrors()[0]}</b>
+						</div>
+
+						<button type="submit" n:name="find_new_section" class="btn btn-success btn-block w-100">{_ sections.reservation.button_next_section}</button>
+					{/if}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">{_ sections.reservation.button_cancel}</button>
+					<button type="submit" n:name="in_solution" class="btn btn-primary">{_ sections.reservation.button_reservation}</button>
+				</div>
+			</div>
+		{/form}
+    </div>
+</div>

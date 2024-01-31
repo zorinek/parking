@@ -1,0 +1,162 @@
+{layout '../../../@layout_protected.latte'}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+<a n:href=":Projects:Projects:preview locale => $locale, pro_id => ''">{_ projects.detail.preview}</a>
+<span>  >  </span>
+{_ projects.detail.breadcrumb}
+{/block}
+{block title}
+{_ projects.detail.title}
+{/block}
+{block description}
+{_ projects.detail.description}
+{/block}
+{block content}
+
+
+<div class="container">
+    <div class='row'>
+        <div class='col-sm-12 col-md-12 '>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="float-start">{_ projects.detail.h}</h3>
+                    {if $user->isInRole('admin')}
+                        <a class="btn btn-primary float-end" n:href=":Projects:Projects:update $project->pro_id">{_ projects.detail.button_update}</a>
+                    {/if}
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr><th colspan="2">{_ projects.detail.title_preview}</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{_ projects.detail.pro_name}</td>
+                                <td>{$project->pro_name}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ projects.detail.pro_year}</td>
+                                <td>{$project->pro_datetimeinsert|date:'Y'}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ projects.detail.pro_note}</td>
+                                <td>{$project->pro_note}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="float-start">{_ projects.detail.campaigns.h}</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr><th colspan="3">{_ projects.detail.campaigns.title_preview}</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>{_ projects.detail.campaigns.cam_name}</th>
+                                <th colspan="2">{_ projects.detail.campaigns.detail}</th>
+                            </tr>
+                            {foreach $campaigns as $campaign}
+                                <tr>
+                                    <td>{$campaign->cam_name}</td>
+                                    <td><a n:href=":Projects:Campaigns:preview $project->pro_id, $campaign->cam_id" class="btn btn-primary btn-sm">{_ projects.detail.campaigns.button_detail}</a></td>
+                                    <td><a n:href=":Projects:Campaigns:map $project->pro_id, $campaign->cam_id" class="btn btn-primary btn-sm">{_ projects.detail.campaigns.button_map}</a></td>
+                                </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="float-start">{_ projects.detail.reservations.h}</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>{_ projects.detail.reservations.campaign}</th>
+                                <th>{_ projects.detail.reservations.section}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+							{foreach $my_reservations as $res}
+								<tr>
+									<th>
+										{$res->cam_name}
+									</th>
+									<td>
+										<a n:href=":Projects:Campaigns:detail $res->pro_id, $res->cam_id, $res->seg_id">{$res->seg_id}</a>
+									</td>
+									<td>
+										{form removeReservationSegmentForm}
+											<input type="hidden" n:name="seg_id" value="{$res->seg_id}">
+											<input type="hidden" n:name="cam_id" value="{$res->cam_id}">
+											<button type="submit" n:name="remove_reservation_segment" class="btn btn-warning btn-sm">{_ sections.process.button_cancel_reservation}</button>
+										{/form}
+									</td>
+								</tr>
+							{/foreach}
+							{if empty($my_reservations)}
+								<tr>
+									<td colspan="4" class="text-center bg-warning">{_ projects.detail.reservations.not_found}!</td>
+								</tr>
+							{/if}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {*<form n:name="loadVideoFilesForm">            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="float-start">Načtení videí</h3>
+                </div>
+                <div class="card-body">
+					
+						
+                        {var $param = $p_videos}
+                        {var $name = 'vid_files'}
+                        {if $param['displayed'][$name]}
+                            <div class="form-group">
+                                <label n:name="{$name}" class="form-label mt-2">{_ projects.new.$name}{if $param['required'][$name]} *{/if}</label>
+                                <input type="file" multiple webkitdirectory directory class="form-control {if $form[$name]->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="{$name}" n:name="$name" {if $param['required'][$name]}required{/if}>
+                                <div class="invalid-feedback">{$form[$name]->error}</div>
+                            </div>
+                        {/if}
+                        <input type="hidden" class="form-control" id="original_files" n:name="original_files">
+					
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success float-end" n:name="load_videos">Načíst soubory s nahrávkami</button>
+                </div>
+            </div>
+            </form>*}
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{*block scripts*}
+<!--<script>-->
+<!--    document.getElementById("vid_files").addEventListener("change", (event) => {
+        let output = document.getElementById("original_files");
+        var out = [];
+        for (const file of event.target.files) 
+        {
+            out.push(file.webkitRelativePath);
+        }
+        output.value = JSON.stringify(out);
+    }, false);
+</script>-->
+{*/block*}

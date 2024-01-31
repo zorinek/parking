@@ -1,0 +1,62 @@
+login:
+    title: "Přihlášení"
+    description: "Přihlášení"
+    breadcrumb: "Přihlášení"
+    h: "Přihlášení"
+    error_1: "Zadaný e-mail ještě nebyl ověřen. Počkejte prosím než dorazí. Nebo si jej nechte zaslat znovu"
+    here: "zde"
+    use_email: "E-mail"
+    use_passhash: "Heslo"
+    remember: "Zůstat přihlášen?"
+    button_new_password: "Zapomenuté heslo"
+    button_sign_in: "Přihlásit se"
+    error_use_email: "Prosím vložte e-mail!"
+    error_use_passhash: "Prosím vložte vaše heslo!"
+    error_credentials: "Vámi zadané přihlašovací údaje nejsou správné!"
+    error_account_not_active: "Váš účet není aktivní!"
+    
+reset:
+    title: "Obnovení hesla"
+    description: "Obnovení hesla"
+    breadcrumb: "Obnovení hesla"
+    h: "Obnovení hesla"
+    use_email: "E-mail"
+    button_login: "Přejít na přihlášení"
+    button_reset: "Resetovat heslo"
+    error_use_email: "Prosím vložte e-mail!"
+    error_email_not_found: "Zadaný e-mail nebyl nalezen!"
+    
+reset_successfull:
+    title: "Obnovení hesla bylo úspěšné"
+    description: "Obnovení hesla bylo úspěšné"
+    breadcrumb: "Obnovení hesla bylo úspěšné"
+    h: "Obnovení hesla bylo úspěšné"
+    message: "Pokračujte prosím pomocí odkazu ve vašem e-mailu!"
+    again_message: "Nepřišel vám váš ověřovací e-mail? Můžete"
+    again_href: "zkusit znovu resetovat heslo"
+    
+verification:
+    title: "Volba nového hesla"
+    description: "Volba nového hesla"
+    breadcrumb: "Volba nového hesla"
+    h: "Volba nového hesla"
+    error_token_expired: "Token pro změnu hesla expiroval!"
+    error_token_not_found: "Token pro změnu hesla nebyl_nalezen!"
+    use_passhash: "Heslo"
+    use_passhash_second: "Ověření hesla"
+    button_reset_password: "Resetovat heslo"
+
+reset_email:
+    title: "Resetování hesla"
+    hello: "Dobrý den"
+    again: "Vaše heslo můžete resetovat kliknutím na  následující odkaz"
+    expire: "Platnost odkazu vyprší"
+
+tfa:
+    title: "Ověření pomocé druhého faktoru"
+    description: "Ověření pomocé druhého faktoru"
+    breadcrumb: "Ověření pomocé druhého faktoru"
+    h: "Ověření pomocé druhého faktoru"
+    tfa_otp: "Kód"
+    sign_in_tfa: "Přihlásit se"
+    

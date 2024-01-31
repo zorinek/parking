@@ -1,0 +1,88 @@
+{layout '../../../@layout_protected.latte'}
+{block breadcrumb}
+<a n:href=":Admin:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+<a n:href=":Queries:Queries:preview locale => $locale, que_id => ''">{_ queries.detail.preview}</a>
+<span>  >  </span>
+{_ queries.detail.breadcrumb}
+{/block}
+{block title}
+{_ queries.detail.title}
+{/block}
+{block description}
+{_ queries.detail.description}
+{/block}
+{block content}
+
+
+<div class="container">
+    <div class='row'>
+        <div class='col-sm-12 col-md-12 '>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="float-start">{_ queries.detail.h}</h3>
+                    <a class="btn btn-primary float-end" n:href=":Queries:Queries:updateQuery $query->que_id">{_ queries.detail.button_update}</a>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr><th colspan="2">{_ queries.detail.title_preview}</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{_ queries.detail.que_name}</td>
+                                <td>{$query->que_name}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ queries.detail.que_query}</td>
+                                <td>{$query->que_query}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ queries.detail.que_note}</td>
+                                <td>{$query->que_note}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ queries.detail.que_status}</td>
+                                <td>{_ queries.que_status.$query->que_status}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>{_ queries.detail.title_data}</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            {if isset($query_data[0])}
+                                <thead>
+                                    <tr>
+                                        {foreach $query_data[0] as $key => $col}
+                                            <th>{$key}</th>
+											{/foreach}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {foreach $query_data as $line}
+                                        <tr>
+                                            {foreach $line as $col}
+                                                <td>{$col}</td>
+                                            {/foreach}
+                                        </tr>
+                                    {/foreach}
+                                <tbody>
+								{else}
+                                <tbody>
+                                    <tr><td class="bg-warning text-center">{_ queries.detail.no_data}</td></tr>
+                                </tbody>
+                            {/if}
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}
+

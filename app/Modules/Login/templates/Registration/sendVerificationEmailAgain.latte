@@ -1,0 +1,40 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ registration.again.title}
+{/block}
+{block description}
+{_ registration.again.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ registration.again.breadcrumb}
+{/block}
+{block content}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-2">
+            <form n:name="verificationEmailAgainForm">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>{_ registration.again.h}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label n:name="use_email" class="form-label mt-2">{_ registration.again.use_email}</label>
+                            <input type="email" class="form-control {if $form['use_email']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="email" n:name="use_email">
+                            <div class="invalid-feedback">{$form['use_email']->error}</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a n:href=":Login:Login:login">{_ registration.again.button_login}</a>
+                        <button n:name="send_verification_again" class="btn btn-success float-end">{_ registration.again.button_send_verification_again}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{/block}

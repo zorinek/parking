@@ -1,0 +1,162 @@
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">{_ configuration.h}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="2">{_ configuration.display}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>{_ configuration.layout}</th>
+							<td>{isset($user_configuration['layout']) ? $user_configuration['layout']->usc_value : 1}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.measurement}</th>
+							<td>{isset($user_configuration['measurement']) ? $user_configuration['measurement']->usc_value : 1}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="2">{_ configuration.playing}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>{_ configuration.play_pause}</th>
+							<td>{$user_configuration['play_pause']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.speed_up}</th>
+							<td>{$user_configuration['speed_up']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.speed_down}</th>
+							<td>{$user_configuration['speed_down']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.reset_speed}</th>
+							<td>{$user_configuration['reset_speed']->usc_value}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="2">{_ configuration.together_control}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>{_ configuration.plus_illegal}</th>
+							<td>{$user_configuration['plus_illegal']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.minus_illegal}</th>
+							<td>{$user_configuration['minus_illegal']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.plus_empty}</th>
+							<td>{$user_configuration['plus_empty']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.minus_empty}</th>
+							<td>{$user_configuration['minus_empty']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.plus_not}</th>
+							<td>{$user_configuration['plus_not']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.minus_not}</th>
+							<td>{$user_configuration['minus_not']->usc_value}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="2">{_ configuration.left_together_control}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>{_ configuration.left_plus_illegal}</th>
+							<td>{$user_configuration['left_plus_illegal']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.left_minus_illegal}</th>
+							<td>{$user_configuration['left_minus_illegal']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.left_plus_empty}</th>
+							<td>{$user_configuration['left_plus_empty']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.left_minus_empty}</th>
+							<td>{$user_configuration['left_minus_empty']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.left_plus_not}</th>
+							<td>{$user_configuration['left_plus_not']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.left_minus_not}</th>
+							<td>{$user_configuration['left_minus_not']->usc_value}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th colspan="2">{_ configuration.right_together_control}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>{_ configuration.right_plus_illegal}</th>
+							<td>{$user_configuration['right_plus_illegal']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.right_minus_illegal}</th>
+							<td>{$user_configuration['right_minus_illegal']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.right_plus_empty}</th>
+							<td>{$user_configuration['right_plus_empty']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.right_minus_empty}</th>
+							<td>{$user_configuration['right_minus_empty']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.right_plus_not}</th>
+							<td>{$user_configuration['right_plus_not']->usc_value}</td>
+						</tr>
+						<tr>
+							<th>{_ configuration.right_minus_not}</th>
+							<td>{$user_configuration['right_minus_not']->usc_value}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{_ configuration.close}</button>
+			</div>
+		</div>
+	</div>
+</div>

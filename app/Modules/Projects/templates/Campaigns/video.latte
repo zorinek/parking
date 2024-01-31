@@ -1,0 +1,12 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="h5 float-start">{_ $name}</h4>
+        <span class="float-end">&nbsp;x</span>
+        <span id="{$id}_speed" class="float-end">1</span>
+        <span class="float-end">{_ sections.process.player_speed}:&nbsp;</span>
+    </div>
+
+    <video class="col-12" id="{$id}" start="{$video_start}" end="{$video_end}" pos="0" controls>
+        <source src="{$basePath}/video/{$video_name}?t=185" type="video/webm">
+    </video>
+</div>

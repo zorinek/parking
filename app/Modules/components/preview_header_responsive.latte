@@ -1,0 +1,30 @@
+<div class="card">
+    <div class="card-header p-1 m-0 navbar-dark bg-secondary" id="heading-search">
+        <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#collapse-search" aria-expanded="true" aria-controls="collapse-search">
+            <span class="navbar-toggler-icon "></span>  <small>{_ preview.search}</small>
+        </button>
+    </div>
+
+    <div id="collapse-search" class="collapse" aria-labelledby="heading-search" data-parent="#accordion">
+		<div class="card-body ">
+            {foreach $search_values as $value}
+                {breakIf $value[0] == "and_or"}
+                <th class="text-center">
+                    <div class="form-group">
+                        <label class="form-label mt-2">{_ $lang_file_name . $value[0]}</label>
+                        <input type="text" onchange="my_search();" id="{$value[0]}" class="form-control line-mobile" {if isset($params[$value[0]])}value="{$params[$value[0]]}"{/if}>
+                    </div>
+                </th>
+            {/foreach}
+
+            <div class="form-group">
+                <label for="and_or" class="form-label mt-2">{_ preview.and_or}</label>
+                <select class="form-control" id="and_or" name="and_or" onchange="my_search();">
+                    <option value="and" {if isset($params['and_or']) && $params['and_or'] == "and"}selected{/if}>{_ preview.and}</option>
+                    <option value="or" {if isset($params['and_or']) && $params['and_or'] == "or"}selected{/if}>{_ preview.or}</option>
+                </select>
+            </div>
+            <button type="button" onclick="reset_my_search();" class="btn btn-warning btn-sm btn-block mt-4 w-100">{_ preview.reset_search}</button>
+		</div>
+    </div>
+</div>

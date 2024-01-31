@@ -1,0 +1,18 @@
+{if !empty($notes)}
+	<div class="card mb-3">
+		<div class="card-header">
+			<h4 class="h5">{_ sections.campaigns.notes}</h4>
+		</div>
+		<div class="card-body m-0 p-0">
+			<table class="table table-striped m-0 p-0">
+				<tbody>
+					{foreach $notes as $line}
+						<tr>
+							<td>{$line->not_note}</td>
+						</tr>
+					{/foreach}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{/if}

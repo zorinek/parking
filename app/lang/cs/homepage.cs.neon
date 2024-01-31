@@ -1,0 +1,15 @@
+all_title_end: "Interní projekt Parkování"
+title: "Homepage"
+h1: "Interní projekt Parkování"
+description: "Interní projekt Parkování"
+breadcrumb: "Homepage"
+registration: "Registrace"
+login: "Přihlášení"
+
+admin:
+    title: "Homepage"
+    h1: "Interní projekt Parkování"
+    description: "Interní projekt Parkování"
+    breadcrumb: "Homepage"
+    last_projects: "Poslední projekty"
+    my_reservations: "Moje rezervace"

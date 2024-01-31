@@ -1,0 +1,47 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="h5">{_ sections.process.informations}</h4>
+    </div>
+    <div class="card-body m-0 p-0">
+        <table class="table table-striped m-0 p-0">
+            <tbody>
+                <tr>
+                    <th>{_ sections.informations.section_status}</th>
+                    <td>
+                        {if $campaigns_segments && $campaigns_segments->cas_done == 2 && $user->id == $campaigns_segments->use_id}
+                            {_ sections.reservation.reserved_by_me}
+                        {elseif $campaigns_segments}
+                            {_ 'sections.cas_done.' . $campaigns_segments->cas_done}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{_ sections.informations.gps_position}</th>
+                    <td id="gps_position"></td>
+                </tr>
+                <tr>
+                    <th>{_ sections.informations.street}</th>
+                    <td>{$segment->on}</td>
+                </tr>
+                <tr>
+                    <th>{_ sections.informations.project_name}</th>
+                    <td>{$project->pro_name}</td>
+                </tr>
+                <tr>
+                    <th>{_ sections.informations.campaign_name}</th>
+                    <td>{$campaign->cam_name}</td>
+                </tr>
+                <tr>
+                    <th>{_ sections.informations.section_number}</th>
+                    <td>{$segment->seg_id}</td>
+                </tr>
+                {if !is_null($campaigns_segments->use_id)}
+                    <tr>
+                        <th>{_ sections.informations.user_reservation}</th>
+                        <td>{$campaigns_segments->ref('use_id')->use_name} ({$campaigns_segments->ref('use_id')->use_email})</td>
+                    </tr>
+                {/if}
+            </tbody>
+        </table>
+    </div>
+</div>

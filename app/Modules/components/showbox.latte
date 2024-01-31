@@ -1,0 +1,208 @@
+{block head}
+<style>
+    #showbox_box{
+        position: fixed;
+        right: 0;
+        top: 50%;
+        z-index:10000;
+    }
+    #showbox_visible
+    {
+        border-top-left-radius: 0.5em;
+        border-bottom-left-radius: 0.5em;
+        writing-mode: vertical-rl;
+        /*text-orientation: upright;*/
+        cursor: pointer;
+    }
+    .showbox_badge
+    {
+        writing-mode: horizontal-tb;
+        text-orientation: sideways;
+    }
+    .showbox_hide
+    {
+        display:none;
+    }
+    #showbox_show
+    {
+        border-bottom-left-radius: 0.5em;
+        background-color: white;
+        min-width:220px;
+        max-width:220px;
+    }
+    .showbox_mycol{
+        width:auto;
+        flex:none;
+    }
+    .showbox_myrow{
+        --bs-gutter-x: 0;
+    }
+    .showbox_line:hover{
+        background-color: lightgrey;
+    }
+</style>
+{/block}
+<div id="showbox_box">
+    <div class='row showbox_myrow'>
+        <div class='col showbox_mycol'>
+            <div id="showbox_visible" class='p-2 bg-warning' onclick='showbox_show();'>
+                {_ showbox.name}
+                <span class="showbox_badge badge rounded-pill bg-primary {if count($notes) == 0}d-none{/if}" id="showbox_count">{count($notes)}</span>
+            </div>
+        </div>
+        <div class='col'>
+            <div id='showbox_show' class='showbox_hide p-2 border'>
+                <div id='showbox_alert_success' class="alert alert-success alert-dismissible fade d-none p-1 mb-1" role="alert">
+                    {_ showbox.note_saved}!
+                </div>
+                <div id='showbox_alert_warning' class="alert alert-warning alert-dismissible fade d-none p-1 mb-1" role="alert">
+                    {_ showbox.insert_text}!
+                </div>
+                <form>
+                    <div class="mb-3">
+                        <label for="showbox_textarea" class="form-label">{_ showbox.note_text}</label>
+                        <textarea class="form-control" id="showbox_textarea" rows="4" required></textarea>
+                    </div>
+                    <button type="button" class="btn btn-success w-100" onclick="showbox_send_message();">{_ showbox.button_insert}</button>
+                </form>
+                <div class='mt-2'>
+                    <h6>{_ showbox.last_inserted_notes}</h6>
+                    <div id="showbox_insert"></div>
+                    {var $cnt = 0}
+                    {foreach $notes as $note}
+                        {breakIf $cnt == 3}
+                        {if isset($note)}
+                            <div class='showbox_line p-1 clearfix'>
+                                {var $cnt = $cnt + 1}
+                                {$note->not_note|truncate:100}
+                                <span class='float-end'><a href="" data-bs-toggle="modal" data-bs-target="#showboxModal" data-bs-showbox-note="{$note->not_note}">{_ showbox.show_note}</a></span>
+                            </div>
+                        {/if}
+                    {/foreach}
+                    {if $cnt == 0}
+                        <div id="showbox_no_notes" class="alert alert-warning alert-dismissible fade show p-1 text-center" role="alert">
+                            {_ showbox.no_notes}!
+                        </div>
+                    {/if}
+                    <div class="text-center"><a n:href=":Notes:Notes:notesPreview">{_ showbox.show_all}</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="showboxModal" tabindex="-1" aria-labelledby="showboxModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="showboxModalLabel">{_ showbox.note_title}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p id="not_note"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{_ showbox.note_close}</button>
+			</div>
+		</div>
+    </div>
+</div>
+{block scripts}
+<script>
+	function showbox_show()
+	{
+		var showbox_show = document.getElementById("showbox_show");
+		if (showbox_show.classList.contains("showbox_hide"))
+		{
+			showbox_show.classList.remove("showbox_hide");
+		} else
+		{
+			showbox_show.classList.add("showbox_hide");
+		}
+	}
+
+	function showbox_send_message()
+	{
+//                console.log("send");
+		var page = window.location.href;
+		var str = page.split("?");
+		var note = document.getElementById("showbox_textarea");
+		if (note.value != "")
+		{
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					var result = JSON.parse(xhttp.responseText);
+					note.value = "";
+					var alert = document.getElementById("showbox_alert_warning");
+					if (!alert.classList.contains("d-none"))
+					{
+						alert.classList.add("d-none");
+						alert.classList.remove("show");
+					}
+					var success = document.getElementById("showbox_alert_success");
+					success.classList.remove("d-none");
+					success.classList.add("show");
+
+
+					var insert = document.getElementById("showbox_insert");
+					insert.insertAdjacentHTML("afterbegin", result["note"]);
+
+					var count = document.getElementById("showbox_count");
+					if (count.classList.contains('d-none'))
+					{
+						count.classList.remove('d-none');
+					}
+					var cnt = count.innerHTML;
+					cnt = parseInt(cnt) + 1;
+					count.innerHTML = cnt;
+					document.getElementById("showbox_textarea").classList.remove('is-valid');
+
+					var no_notes = document.getElementById("showbox_no_notes");
+					if (!no_notes.classList.contains("d-none"))
+					{
+						no_notes.classList.add("d-none")
+					}
+
+					setTimeout(function () {
+						var success = document.getElementById("showbox_alert_success");
+						success.classList.add("d-none");
+						success.classList.remove("show");
+					}, 3000);
+				}
+			};
+			xhttp.open("GET", {link :Notes:Notes:addNote} + "?not_page=" + str[0] + "&not_note=" + note.value, true);
+			xhttp.send();
+		} else
+		{
+			var success = document.getElementById("showbox_alert_success");
+			if (!success.classList.contains("d-none"))
+			{
+				success.classList.add("d-none");
+				success.classList.remove("show");
+			}
+			var alert = document.getElementById("showbox_alert_warning");
+			alert.classList.remove("d-none");
+			alert.classList.add("show");
+		}
+	}
+
+
+	var showboxModal = document.getElementById('showboxModal')
+	showboxModal.addEventListener('show.bs.modal', function (event) {
+		// Button that triggered the modal
+		var button = event.relatedTarget
+		// Extract info from data-bs-* attributes
+		var not_note = button.getAttribute('data-bs-showbox-note')
+		// If necessary, you could initiate an AJAX request here
+		// and then do the updating in a callback.
+		//
+		// Update the modal's content.
+//                  var modalTitle = exampleModal.querySelector('.modal-title')
+		var modalBodyInput = showboxModal.querySelector('.modal-body #not_note')
+
+//                  modalTitle.textContent = 'New message to ' + recipient
+		modalBodyInput.innerHTML = not_note
+	})
+
+</script>
+{/block}

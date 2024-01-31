@@ -1,0 +1,31 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ registration.successfull.title}
+{/block}
+{block description}
+{_ registration.successfull.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ registration.successfull.breadcrumb}
+{/block}
+{block content}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{_ registration.successfull.h}Registrace dokončena</h3>
+                </div>
+                <div class="card-body">
+                    <p>{_ registration.successfull.message}</p>
+                    <p>{_ registration.successfull.no_email_1} <a n:href=":Login:Registration:sendVerificationEmailAgain">{_ registration.successfull.no_email_2}</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}

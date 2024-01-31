@@ -1,0 +1,82 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ contactform.form.title}
+{/block}
+{block description}
+{_ contactform.form.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ contactform.form.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form n:name="contactformForm">
+                <div class="card">
+                    <div class="card-header">
+                        <h1>{_ contactform.form.h}</h1>
+                    </div>
+                    <div class="card-body">
+                        {if $parameters['fields']['name']}
+                            <div class="form-group">
+                                <label n:name="con_name" class="form-label mt-2">{_ contactform.form.con_name}</label>
+                                <input type="text" class="form-control {if $form['con_name']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="email" n:name="con_name">
+                                <div class="invalid-feedback">{$form['con_name']->error}</div>
+                            </div>
+                        {/if}
+                        {if $parameters['fields']['phone']}
+                            <div class="form-group">
+                                <label n:name="con_phone" class="form-label mt-2">{_ contactform.form.con_phone}</label>
+                                <input type="text" class="form-control {if $form['con_phone']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="email" n:name="con_phone">
+                                <div class="invalid-feedback">{$form['con_phone']->error}</div>
+                            </div>
+                        {/if}
+                        <div class="form-group">
+                            <label n:name="con_email" class="form-label mt-2">{_ contactform.form.con_email}</label>
+                            <input type="email" class="form-control {if $form['con_email']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="email" n:name="con_email">
+                            <div class="invalid-feedback">{$form['con_email']->error}</div>
+                        </div>
+                        {if $parameters['fields']['category']}
+                            <div class="form-group">
+                                <label n:name="con_category" class="form-label mt-2">{_ contactform.form.con_category}</label>
+                                <select class="form-select {if $form['con_category']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" n:name="con_category">
+
+                                </select>
+                                <div class="invalid-feedback">{$form['con_category']->error}</div>
+                            </div>
+                        {/if}
+
+                        <div class="form-group">
+                            <label n:name="con_message" class="form-label mt-2">{_ contactform.form.con_message}</label>
+                            <textarea class="form-control {if $form['con_message']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="con_message" n:name="con_message" rows="3"></textarea>
+                            <div class="invalid-feedback">{$form['con_message']->error}</div>
+                        </div>
+                        {if $parameters['fields']['sender']}
+                            <div class="form-group form-check mt-2">
+                                <input type="checkbox" class="form-check-input {if $form['con_sender']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="con_sender" n:name="con_sender">
+                                <label class="form-check-label" n:name="con_sender">{_ contactform.form.con_sender}</label>
+                                <div class="invalid-feedback">{$form['con_sender']->error}</div>
+                            </div>
+                        {/if}
+
+                        {if $parameters['captcha_enabled']}
+                            <div class="form-group">
+                                <label n:name="captcha">{_ contactform.form.captcha} {$captcha['text']}</label>
+                                <input type="text" class="form-control {if $form['captcha']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="captcha" n:name="captcha" value="">
+                                <input type="hidden" class="form-control" id="captcha" n:name="captcha_text" value="{$captcha['text']}">
+                                <div class="invalid-feedback">{$form['captcha']->error}</div>
+                            </div>
+                        {/if}
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-success float-end" n:name="send_message">{_ contactform.form.button_send}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}

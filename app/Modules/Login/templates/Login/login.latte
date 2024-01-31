@@ -1,0 +1,60 @@
+{layout '../../../@layout_frontend.latte'}
+{block title}
+{_ login.login.title}
+{/block}
+{block description}
+{_ login.login.description}
+{/block}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+{_ login.login.breadcrumb}
+{/block}
+{block content}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <form n:name="loginForm" class="needs-validation">
+                <div class="card">
+                    <div class="card-header">
+                        <h1>{_ login.login.h}</h1>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="alert alert-danger error" role="alert" n:ifcontent n:foreach="$form->ownErrors as $error">
+                            {if $error == '1'}
+                                {_ login.login.error_1} <a n:href=":Login:Registration:sendVerificationEmailAgain">{_ login.login.here}</a>
+                            {else}
+                                {$error}
+                            {/if}
+                        </div>
+
+                        <div class="form-group">
+                            <label n:name="use_email" class="form-label mt-2">{_ login.login.use_email}</label>
+                            <input type="email" class="form-control" id="email" n:name="use_email">
+                        </div>
+                        <label n:name="use_passhash" class="form-label mt-2">{_ login.login.use_passhash}</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control {if !$password_display}rounded-end{/if} {if $form['use_passhash']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" value="{$form['use_passhash']->value}" id="password" n:name="use_passhash">
+                            {if $password_display}<button class="btn btn-outline-secondary show-password rounded-end fa fa-eye-slash" type="button"></button>{/if}
+                            <div class="invalid-feedback">{$form['use_passhash']->error}</div>
+                        </div>
+                        <div class="form-group form-check mt-2">
+                            <input type="checkbox" class="form-check-input" id="remember" n:name="remember">
+                            <label class="form-check-label" for="remember">{_ login.login.remember}</label>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        {if !$disable_password_change}
+                            <a n:href=":Login:Login:resetPassword" class="btn btn-secondary">{_ login.login.button_new_password}</a>
+                        {/if}
+                        <button type="submit" n:name="sign_in" class="btn btn-success float-end">{_ login.login.button_sign_in}</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{/block}

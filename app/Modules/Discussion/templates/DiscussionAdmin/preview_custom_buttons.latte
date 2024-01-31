@@ -1,0 +1,12 @@
+<td>
+    {if is_null($line->{'dis_authorized_by'})}
+        <a n:href=":Discussion:DiscussionAdmin:approve $line->{$search_values[array_key_first($search_values)][0]}, $page" class="btn btn-sm btn-success btn-block w-100 mb-1">{_ discussion.admin.button_approve}</a>
+    {else}
+        <a n:href=":Discussion:DiscussionAdmin:disapprove $line->{$search_values[array_key_first($search_values)][0]}, $page" class="btn btn-sm btn-danger btn-block w-100 mb-1">{_ discussion.admin.button_disapprove}</a>
+    {/if}
+
+{capture $link}{plink :Discussion:DiscussionAdmin:remove $line->{$search_values[array_key_first($search_values)][0]}, $page}{/capture}
+<button type="button" id='remove_{$line->{$search_values[array_key_first($search_values)][0]}}' class="btn btn-danger btn-sm btn-block w-100" data-bs-trigger='click'  data-bs-html='true' data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-title='{_ discussion.admin.remove_question}'  data-bs-content='<div class="d-flex"><button class="btn btn-sm btn-secondary me-auto" data-value=&#39;remove_{$line->{$search_values[array_key_first($search_values)][0]}}&#39;>{_ preview.no}</button><a class="btn btn-sm btn-danger" href="{$link}">{_ preview.yes}</a></div>'>
+	{_ preview.button_remove}
+</button>
+</td>

@@ -1,0 +1,50 @@
+<form n:name="updateUserForm">
+    <div class="card">
+        <div class="card-header">
+            <h2>{_ users.edituser.h}</h2>
+        </div>
+        <div class="card-body">
+            {if $form_loc == "admin"}
+                <div class="form-group">
+                    <label n:name="use_email" class="form-label mt-2">{_ users.edituser.use_email}</label>
+                    <input type="email" class="form-control {if $form['use_email']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="email" n:name="use_email">
+                    <div class="invalid-feedback">{$form['use_email']->error}</div>
+                </div>
+            {elseif $form_loc == "profile"}
+                <div class="form-group">
+                    <label name="use_email" class="form-label mt-2">{_ users.edituser.use_email}</label>
+                    <input type="email" class="form-control" name="use_email" disabled value="{$form['use_email']->value}">
+                </div>
+            {/if}
+            {if $name_enabled}
+                <div class="form-group">
+                    <label n:name="use_name" class="form-label mt-2">{_ users.edituser.use_name}</label>
+                    <input type="text" class="form-control {if $form['use_name']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="name" n:name="use_name">
+                    <div class="invalid-feedback">{$form['use_name']->error}</div>
+                </div>
+            {/if}
+            {if $phone_enabled}
+                <div class="form-group">
+                    <label n:name="use_phone" class="form-label mt-2">{_ users.edituser.use_phone}</label>
+                    <input type="text" class="form-control {if $form['use_phone']->error}is-invalid{elseif $form->isSubmitted()}is-valid{/if}" id="phone" n:name="use_phone">
+                    <div class="invalid-feedback">{$form['use_phone']->error}</div>
+                </div>
+            {/if}
+            {if $form_loc == "admin"}
+                <label n:name="use_role" class="form-label mt-2">{_ users.edituser.use_role}</label>
+                <select class="form-select" n:name="use_role">
+
+                </select>
+                <label n:name="use_active" class="form-label mt-2">{_ users.edituser.use_active}</label>
+                <select class="form-select" n:name="use_active">
+
+                </select>
+            {elseif $form_loc == "profile"}
+
+            {/if}
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-success float-end" n:name="save">{_ users.edituser.button_save}</button>
+        </div>
+    </div>
+</form>

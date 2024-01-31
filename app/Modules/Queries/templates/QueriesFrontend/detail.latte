@@ -1,0 +1,107 @@
+{layout '../../../@layout_protected.latte'}
+{block breadcrumb}
+<a n:href=":Frontend:Homepage:default locale => $locale"><i class="fas fa-home"></i></a>
+<span>  >  </span>
+<a n:href=":Queries:QueriesFrontend:preview locale => $locale, que_id => ''">{_ queries.detail_frontend.preview}</a>
+<span>  >  </span>
+{_ queries.detail_frontend.breadcrumb}
+{/block}
+{block title}
+{_ queries.detail_frontend.title}
+{/block}
+{block description}
+{_ queries.detail_frontend.description}
+{/block}
+{block content}
+
+
+<div class="container">
+    <div class='row'>
+        <div class='col-sm-12 col-md-12 '>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3 class="float-start">{_ queries.detail_frontend.h}</h3>
+                    <div class="btn-group float-end">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            {_ preview.export.button_exports}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="export_file({link $exports['url'] $que_id, 'excel', 'all'});">{_ preview.export.link_all_excel}</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="export_file({link $exports['url'] $que_id, 'pdf', 'all'});">{_ preview.export.link_all_pdf}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr><th colspan="2">{_ queries.detail_frontend.title_preview}</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{_ queries.detail_frontend.que_name}</td>
+                                <td>{$query->que_name}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ queries.detail_frontend.que_query}</td>
+                                <td>{$query->que_query}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ queries.detail_frontend.que_note}</td>
+                                <td>{$query->que_note}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ queries.detail_frontend.que_status}</td>
+                                <td>{_ queries.que_status.$query->que_status}</td>
+                            </tr>
+                            <tr>
+                                <td>{_ queries.detail_frontend.all_count}</td>
+                                <td>{$all_count->count}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>{_ queries.detail_frontend.title_data}</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            {if isset($query_data[0])}
+                                <thead>
+                                    <tr>
+                                        {foreach $query_data[0] as $key => $col}
+                                            <th>{$key}</th>
+											{/foreach}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {foreach $query_data as $line}
+                                        <tr>
+                                            {foreach $line as $col}
+                                                <td>{$col}</td>
+                                            {/foreach}
+                                        </tr>
+                                    {/foreach}
+                                <tbody>
+								{else}
+                                <tbody>
+                                    <tr><td class="bg-warning text-center">{_ queries.detail_frontend.no_data}</td></tr>
+                                </tbody>
+                            {/if}
+                        </table>
+                        {include "../../../components/pagination.latte",
+                            limit => $limit,
+                            page => $page,
+                            count => $all_count,
+                            presenter => $redirect_route,
+                            id => $que_id
+                        }
+                    </div>
+                </div>
+                <div class="card-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}
+
